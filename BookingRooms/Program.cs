@@ -220,12 +220,43 @@ public class Program
 
             case "3":
                 Console.Clear();
+                /*var resultEmployees = MenuEmployees.GetEmployees();*/
+                /*var getDepartmentId = from e in resultEmployees
+                                      where e.DepartmentId == "1A1"
+                                      select e;*/
+                /*var getDepartmentId = resultEmployees.Where(e => e.DepartmentId.Contains("1A1")).ToList();
+                foreach (var getName in getDepartmentId)
+                {
+                    Console.WriteLine(getName.FirstName);
+                    Console.WriteLine(getName.DepartmentId);
+                }*/
+                /*var resultEmployees = MenuEmployees.GetEmployees();
+                foreach (var resultEmp in resultEmployees)
+                {
+                    Console.WriteLine("ID            : " + resultEmp.Id);
+                    Console.WriteLine("First Name    : " + resultEmp.FirstName);
+                    Console.WriteLine("Last Name     : " + resultEmp.LastName);
+                    Console.WriteLine("Birthdate     : " + resultEmp.Birthdate);
+                    Console.WriteLine("Gender        : " + resultEmp.Gender);
+                    Console.WriteLine("Hiring Date   : " + resultEmp.HiringDate);
+                    Console.WriteLine("Email         : " + resultEmp.Email);
+                    Console.WriteLine("Phone Number  : " + resultEmp.PhoneMumber);
+                    Console.WriteLine("Department ID : " + resultEmp.DepartmentId);
+                }*/
                 Console.WriteLine("Berikut adalah list nama department: ");
                 var resultsDepart = MenuDepartments.GetDepartments();
                 foreach (var resultDep in resultsDepart)
                 {
                     Console.WriteLine("Id : " + resultDep.Id);
                     Console.WriteLine("Nama : " + resultDep.Name);
+                }
+                Console.WriteLine("================================");
+                Console.WriteLine("Berikut adalah list nama universitas: ");
+                var resultsuniv = MenuUniversities.GetUniversities();
+                foreach (var resultUnivall in resultsuniv)
+                {
+                    Console.WriteLine("Id : " + resultUnivall.Id);
+                    Console.WriteLine("Nama : " + resultUnivall.Name);
                 }
                 Console.WriteLine("================================");
                 Console.WriteLine("Masukkan data-data berikut: ");
@@ -296,10 +327,55 @@ public class Program
         edu.Degree = educations.Degree;
         edu.Gpa = educations.Gpa;
 
+        var prof = new Profilings();
+
         MenuEmployees.InsertEmployee(employees);
         var cekNameUniv = MenuUniversities.GetIDByNameUniversity(universities);
+        // cek apakah nama univ sudah ada
+        foreach (var cekName in cekNameUniv)
+        {
+            Console.WriteLine(cekName.Id);
+            if (cekName.Id != 0)
+            {
+                univ.Id = cekName.Id;
+                edu.UniversityId = univ.Id;
+                // insert ke education dengan id univ yg sudah ada
+                MenuEducation.InsertEducation(edu);
+
+            }
+        }
+        var getIdEdu = MenuEducation.GetIdByMajorEducation(educations);
+        var getEmployeeId = MenuEmployees.GetIdByNikEmployee(employees);
+        foreach (var idEdu in getIdEdu)
+        {
+            edu.Id = idEdu.Id;
+            prof.EducationId = edu.Id;
+        }
+        foreach (var idEmployee in getEmployeeId)
+        {
+            emp.Id = idEmployee.Id;
+            prof.EmployeeId = emp.Id;
+        }
+        MenuProfilings.InsertProfilings(prof);
+        /*var getIdUniv = MenuUniversities.GetIDByNameUniversity(universities);
+        foreach (var idUniv in getIdUniv)
+        {
+            if (idUniv.Id != 0)
+            {
+                univ.Id = idUniv.Id;
+                edu.UniversityId = univ.Id;
+                // insert ke education dengan id univ yg sudah ada
+                Console.WriteLine(edu.UniversityId);
+                MenuEducation.InsertEducation(edu);
+                Console.WriteLine(univ.Id);
+            }
+        }*/
+
+
+
+
         /*var univ = new Universities();*/
-        if (cekNameUniv != null)
+        /*if (cekNameUniv != null)
         {
             foreach(var iduniv in cekNameUniv)
             {
@@ -325,7 +401,7 @@ public class Program
                 emp.Id = idEmployee.Id;
             }
         }
-        MenuProfilings.InsertProfilings(emp, edu);
+        MenuProfilings.InsertProfilings(emp, edu);*/
     }
 
     public static int InsertAllAtOnce(Employees employee, Universities universities, Educations educations)

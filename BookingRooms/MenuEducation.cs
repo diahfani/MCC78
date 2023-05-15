@@ -110,7 +110,7 @@ public class MenuEducation
         {
             SqlCommand command = new SqlCommand();
             command.Connection = connection;
-            command.CommandText = "Select id from tb_m_educations where major = @major and degree = @degree and gpa = @gpa and university_id = @university_id";
+            command.CommandText = "Select id from tb_m_educations where major = @major and degree = @degree and gpa = @gpa";
 
             var pMajor = new SqlParameter
             {
@@ -136,17 +136,17 @@ public class MenuEducation
                 Value = education.Gpa
             };
 
-            var pUniversityId = new SqlParameter
+           /* var pUniversityId = new SqlParameter
             {
                 ParameterName = "@university_id",
                 SqlDbType = System.Data.SqlDbType.Int,
                 Value = education.UniversityId
-            };
+            };*/
 
             command.Parameters.Add(pMajor);
             command.Parameters.Add(pDegree);
             command.Parameters.Add(pGpa);
-            command.Parameters.Add(pUniversityId);
+            /*command.Parameters.Add(pUniversityId);*/
             connection.Open();
 
             using SqlDataReader reader = command.ExecuteReader();

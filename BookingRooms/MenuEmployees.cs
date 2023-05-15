@@ -128,6 +128,57 @@ public class MenuEmployees
         return result;
     }
 
+    public static List<Employees> GetEmployees()
+    {
+        var employees = new List<Employees>();
+        using SqlConnection connection = new SqlConnection(connectionString);
+        try
+        {
+            SqlCommand command = new SqlCommand();
+            command.Connection = connection;
+            command.CommandText = "Select * from tb_m_employees";
+            connection.Open();
+
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    var emp = new Employees
+                    {
+                        Id = reader.GetGuid(0),
+                        Nik = reader.GetString(1),
+                        FirstName = reader.GetString(2),
+                        LastName = reader.GetString(3),
+                        Birthdate = reader.GetDateTime(4),
+                        Gender = reader.GetString(5),
+                        HiringDate = reader.GetDateTime(6),
+                        Email = reader.GetString(7),
+                        PhoneMumber = reader.GetString(8),
+                        DepartmentId = reader.GetString(9),
+                    };
+                    employees.Add(emp);
+                }
+                return employees;
+            }
+            else
+            {
+                Console.WriteLine("No rows found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            connection.Close();
+        }
+
+
+        return new List<Employees>();
+    }
+
     //GET ID EMPLOYEE BY NIK
     public static List<Employees> GetIdByNikEmployee(Employees employee)
     {

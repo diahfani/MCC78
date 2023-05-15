@@ -133,8 +133,7 @@ public class MenuUniversities
                 // idUniv = reader.GetInt32(0);
                 while (reader.Read())
                 {
-                    /*Console.WriteLine("Id : " + reader.GetInt32(0));
-                    Console.WriteLine("Nama : " + reader.GetString(1));*/
+                    
                     var Univ = new Universities
                     {
                         Id = reader.GetInt32(0)
