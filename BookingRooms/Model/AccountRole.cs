@@ -1,5 +1,5 @@
-﻿namespace BookingRooms;
-public class AccountRoles
+﻿namespace BookingRooms.Model;
+public class AccountRole
 {
     public int Id { get; set; }
     public int AccountId { get; set; }

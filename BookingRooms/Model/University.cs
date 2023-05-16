@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BookingRooms.Config;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookingRooms;
-
-public class MenuUniversities
+namespace BookingRooms.Model;
+public class University
 {
-    private readonly static string connectionString =
-        "Data Source=DIAH;Database=db_booking_rooms_mcc;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+    public int Id { get; set; }
+    public string Name { get; set; }
+
     // Get All Universities
-    public static List<Universities> GetUniversities()
+    public List<University> GetUniversities()
     {
         // generic type universities diambil dari class universities
         // buat instance list untuk menampung data dari database
-        var universities = new List<Universities>();
+        var universities = new List<University>();
         // buat instance connection menggunakan using agar sifatnya disposable
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection(); 
         try
         {
             // buat instance sql command yang mana command ini digunakan untuk memanggil database atau membuat query
@@ -35,7 +31,7 @@ public class MenuUniversities
                 {
                     //Console.WriteLine(reader.GetInt32(0));
                     //Console.WriteLine(reader.GetString(1));
-                    var university = new Universities();
+                    var university = new University();
                     university.Id = reader.GetInt32(0);
                     university.Name = reader.GetString(1);
                     universities.Add(university);
@@ -57,13 +53,13 @@ public class MenuUniversities
         }
 
 
-        return new List<Universities>();
+        return new List<University>();
     }
     // Get by Id universities
-    public static void GetByIdUniversity(Universities universities)
+    public void GetByIdUniversity(University universities)
     {
         // var university = new List<Universities>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             // buat instance command dan query select by id
@@ -104,10 +100,10 @@ public class MenuUniversities
     }
 
     // Get by Name Universities
-    public static List<Universities> GetIDByNameUniversity(Universities universities)
+    public List<University> GetIDByNameUniversity(University universities)
     {
-        var university = new List<Universities>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        var university = new List<University>();
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             // buat instance command dan query select by id
@@ -133,8 +129,8 @@ public class MenuUniversities
                 // idUniv = reader.GetInt32(0);
                 while (reader.Read())
                 {
-                    
-                    var Univ = new Universities
+
+                    var Univ = new University
                     {
                         Id = reader.GetInt32(0)
                     };
@@ -152,15 +148,15 @@ public class MenuUniversities
         {
             connection.Close();
         }
-        return new List<Universities>();
+        return new List<University>();
         // return new List<Universities>();
     }
 
     // Insert into Universities
-    public static int InsertUniversity(Universities universities)
+    public int InsertUniversity(University universities)
     {
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection();
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -198,11 +194,11 @@ public class MenuUniversities
     }
 
     // Update Universities (by id)
-    public static int UpdateByIdUniversities(Universities universities)
+    public int UpdateByIdUniversities(University universities)
     {
         // var university = new List<Universities>();
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection();
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -246,10 +242,10 @@ public class MenuUniversities
     }
 
     // delete universities by id
-    public static int DeleteByIdUniversities(Universities universities)
+    public int DeleteByIdUniversities(University universities)
     {
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection();
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -286,3 +282,5 @@ public class MenuUniversities
 
     }
 }
+
+

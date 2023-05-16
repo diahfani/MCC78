@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BookingRooms.Config;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookingRooms;
-
-public class MenuDepartments
+namespace BookingRooms.Model;
+public class Department
 {
-    private readonly static string connectionString =
-        "Data Source=DIAH;Database=db_booking_rooms_mcc;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-    public static List<Departments> GetDepartments()
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public List<Department> GetDepartments()
     {
-        var departments = new List<Departments>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        var departments = new List<Department>();
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             SqlCommand command = new SqlCommand
@@ -29,7 +24,7 @@ public class MenuDepartments
             {
                 while (reader.Read())
                 {
-                    var department = new Departments
+                    var department = new Department
                     {
                         Id = reader.GetString(0),
                         Name = reader.GetString(1)
@@ -53,6 +48,6 @@ public class MenuDepartments
         }
 
 
-        return new List<Departments>();
+        return new List<Department>();
     }
 }

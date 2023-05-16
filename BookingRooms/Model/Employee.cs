@@ -1,21 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BookingRooms.Config;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookingRooms;
-
-public class MenuEmployees
+namespace BookingRooms.Model;
+public class Employee
 {
-    private readonly static string connectionString =
-    "Data Source=DIAH;Database=db_booking_rooms_mcc;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+    public Guid Id { get; set; }
+    public string Nik { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime Birthdate { get; set; }
+    public string Gender { get; set; }
+    public DateTime HiringDate { get; set; }
+    public string Email { get; set; }
+    public string PhoneMumber { get; set; }
+    public string DepartmentId { get; set; }
 
-    public static int InsertEmployee(Employees employee)
+    public int InsertEmployee(Employee employee)
     {
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection();
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -128,10 +131,10 @@ public class MenuEmployees
         return result;
     }
 
-    public static List<Employees> GetEmployees()
+    public List<Employee> GetEmployees()
     {
-        var employees = new List<Employees>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        var employees = new List<Employee>();
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             SqlCommand command = new SqlCommand();
@@ -144,7 +147,7 @@ public class MenuEmployees
             {
                 while (reader.Read())
                 {
-                    var emp = new Employees
+                    var emp = new Employee
                     {
                         Id = reader.GetGuid(0),
                         Nik = reader.GetString(1),
@@ -176,26 +179,27 @@ public class MenuEmployees
         }
 
 
-        return new List<Employees>();
+        return new List<Employee>();
     }
 
     //GET ID EMPLOYEE BY NIK
-    public static List<Employees> GetIdByNikEmployee(Employees employee)
+    public string GetIdByNikEmployee(string nik)
     {
-        var result = new List<Employees>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        /*var result = new List<Employee>();*/
+        string id = "";
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             SqlCommand command = new SqlCommand();
             command.Connection = connection;
-            command.CommandText = "Select id from tb_m_employees where nik = @nik";
+            command.CommandText = "Select top 1 id from tb_m_employees where nik = '@nik'";
 
             var pNik = new SqlParameter
             {
                 ParameterName = "@nik",
                 SqlDbType = System.Data.SqlDbType.VarChar,
                 Size = 10,
-                Value = employee.Nik
+                Value = nik
             };
 
 
@@ -205,18 +209,20 @@ public class MenuEmployees
             using SqlDataReader reader = command.ExecuteReader();
             if (reader.HasRows)
             {
-
-                while (reader.Read())
+                if (reader.Read())
                 {
-                    /*Console.WriteLine("Id : " + reader.GetInt32(0));
-                    Console.WriteLine("Nama : " + reader.GetString(1));*/
-                    var Employee = new Employees
+                    id = reader.GetGuid(0).ToString();
+                }
+                return id;
+               /* while (reader.Read())
+                {
+                    var Employee = new Employee
                     {
                         Id = reader.GetGuid(0)
                     };
                     result.Add(Employee);
                 }
-                return result;
+                return result;*/
             }
 
         }
@@ -228,7 +234,9 @@ public class MenuEmployees
         {
             connection.Close();
         }
-        return new List<Employees>();
+        return id;
     }
 
 }
+
+

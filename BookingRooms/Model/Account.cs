@@ -1,4 +1,4 @@
-﻿namespace BookingRooms;
+﻿namespace BookingRooms.Model;
 public class Accouns
 {
     public int EmployeeId { get; set; }
@@ -6,7 +6,7 @@ public class Accouns
     public bool IsDeleted { get; set; }
     public string Otp { get; set; }
     public bool IsUsed { get; set; }
-    public DateTime ExpiredTime{ get; set; }
+    public DateTime ExpiredTime { get; set; }
 }
 
 

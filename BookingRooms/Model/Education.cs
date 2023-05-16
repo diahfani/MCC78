@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BookingRooms.Config;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookingRooms;
-
-public class MenuEducation
+namespace BookingRooms.Model;
+public class Education
 {
-    private readonly static string connectionString =
-        "Data Source=DIAH;Database=db_booking_rooms_mcc;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+    public int Id { get; set; }
+    public string Major { get; set; }
+    public string Degree { get; set; }
+    public string Gpa { get; set; }
+    public int? UniversityId { get; set; }
 
     // GET ALL EDUCATIONS
-    public static List<Educations> GetEducations()
+    public List<Education> GetEducations()
     {
-        var educations = new List<Educations>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        var educations = new List<Education>();
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             SqlCommand command = new SqlCommand();
@@ -29,7 +27,7 @@ public class MenuEducation
             {
                 while (reader.Read())
                 {
-                    var education = new Educations
+                    var education = new Education
                     {
                         Id = reader.GetInt32(0),
                         Major = reader.GetString(1),
@@ -56,13 +54,13 @@ public class MenuEducation
         }
 
 
-        return new List<Educations>();
+        return new List<Education>();
     }
 
     // GET BY ID EDUCATION
-    public static void GetByIdEducation(Educations education)
+    public void GetByIdEducation(Education education)
     {
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection(); 
         try
         {
             SqlCommand command = new SqlCommand();
@@ -102,10 +100,10 @@ public class MenuEducation
     }
 
     // GET ID BY NAME EDUCATION
-    public static List<Educations> GetIdByMajorEducation(Educations education)
+    public List<Education> GetIdByMajorEducation(Education education)
     {
-        var educations = new List<Educations>();
-        using SqlConnection connection = new SqlConnection(connectionString);
+        var educations = new List<Education>();
+        using SqlConnection connection = Connection.GetConnection();
         try
         {
             SqlCommand command = new SqlCommand();
@@ -136,12 +134,12 @@ public class MenuEducation
                 Value = education.Gpa
             };
 
-           /* var pUniversityId = new SqlParameter
-            {
-                ParameterName = "@university_id",
-                SqlDbType = System.Data.SqlDbType.Int,
-                Value = education.UniversityId
-            };*/
+            /* var pUniversityId = new SqlParameter
+             {
+                 ParameterName = "@university_id",
+                 SqlDbType = System.Data.SqlDbType.Int,
+                 Value = education.UniversityId
+             };*/
 
             command.Parameters.Add(pMajor);
             command.Parameters.Add(pDegree);
@@ -156,7 +154,7 @@ public class MenuEducation
                 {
                     /*Console.WriteLine("Id : " + reader.GetInt32(0));
                     Console.WriteLine("Nama : " + reader.GetString(1));*/
-                    var Edu = new Educations
+                    var Edu = new Education
                     {
                         Id = reader.GetInt32(0)
                     };
@@ -179,10 +177,10 @@ public class MenuEducation
 
 
     // INSERT EDUCATION
-    public static int InsertEducation(Educations education)
+    public int InsertEducation(Education education)
     {
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection(); ;
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -246,11 +244,11 @@ public class MenuEducation
 
 
     // UPDATE BY ID EDUCATION
-    public static int UpdateByIdEducation(Educations education)
+    public int UpdateByIdEducation(Education education)
     {
         // var university = new List<Universities>();
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection(); 
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -324,10 +322,10 @@ public class MenuEducation
 
 
     // DELETE BY ID EDUCATION
-    public static int DeleteByIdEducation(Educations educations)
+    public int DeleteByIdEducation(Education educations)
     {
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection(); 
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -365,4 +363,6 @@ public class MenuEducation
         return result;
 
     }
+
 }
+

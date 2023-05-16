@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BookingRooms.Config;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookingRooms;
-
-public class MenuProfilings
+namespace BookingRooms.Model;
+public class Profiling
 {
-    private readonly static string connectionString =
-"Data Source=DIAH;Database=db_booking_rooms_mcc;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+    public Guid EmployeeId { get; set; }
+    public int EducationId { get; set; }
 
-    public static int InsertProfilings(Profilings profilings)
+    public int InsertProfilings(Profiling profilings)
     {
         int result = 0;
-        using SqlConnection connection = new SqlConnection(connectionString);
+        using SqlConnection connection = Connection.GetConnection();
         connection.Open();
 
         SqlTransaction transaction = connection.BeginTransaction();
@@ -59,5 +54,44 @@ public class MenuProfilings
         return result;
 
     }
+
+    public List<Profiling> GetProfilings()
+    {
+        var profilings = new List<Profiling>();
+        using SqlConnection connection = Connection.GetConnection();
+        try
+        {
+            SqlCommand command = new SqlCommand();
+            command.Connection = connection;
+            command.CommandText = "select * from tb_tr_profilings";
+            connection.Open();
+
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    var prof = new Profiling();
+                    prof.EmployeeId = reader.GetGuid(0);
+                    prof.EducationId = reader.GetInt32(1);
+                    profilings.Add(prof);
+                }
+                return profilings;
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            connection.Close();
+        }
+        return new List<Profiling>();
+    }
+
 }
+
 
