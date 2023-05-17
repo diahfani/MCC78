@@ -183,23 +183,22 @@ public class Employee
     }
 
     //GET ID EMPLOYEE BY NIK
-    public string GetIdByNikEmployee(string nik)
+    public List<Employee> GetIdByNikEmployee(Employee employee)
     {
-        /*var result = new List<Employee>();*/
-        string id = "";
+        var result = new List<Employee>();
         using SqlConnection connection = Connection.GetConnection();
         try
         {
             SqlCommand command = new SqlCommand();
             command.Connection = connection;
-            command.CommandText = "Select top 1 id from tb_m_employees where nik = '@nik'";
+            command.CommandText = "Select id from tb_m_employees where nik = @nik";
 
             var pNik = new SqlParameter
             {
                 ParameterName = "@nik",
                 SqlDbType = System.Data.SqlDbType.VarChar,
                 Size = 10,
-                Value = nik
+                Value = employee.Nik
             };
 
 
@@ -209,20 +208,18 @@ public class Employee
             using SqlDataReader reader = command.ExecuteReader();
             if (reader.HasRows)
             {
-                if (reader.Read())
+
+                while (reader.Read())
                 {
-                    id = reader.GetGuid(0).ToString();
-                }
-                return id;
-               /* while (reader.Read())
-                {
+                    /*Console.WriteLine("Id : " + reader.GetInt32(0));
+                    Console.WriteLine("Nama : " + reader.GetString(1));*/
                     var Employee = new Employee
                     {
                         Id = reader.GetGuid(0)
                     };
                     result.Add(Employee);
                 }
-                return result;*/
+                return result;
             }
 
         }
@@ -234,7 +231,7 @@ public class Employee
         {
             connection.Close();
         }
-        return id;
+        return new List<Employee>();
     }
 
 }

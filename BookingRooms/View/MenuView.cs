@@ -20,7 +20,7 @@ public class MenuView
         var newChoice = "";
         Console.WriteLine("Selamat datang, Admin!");
         Console.WriteLine("Silahkan pilih data yang ingin dimasukkan :");
-        Console.WriteLine("1. University\n2. Education\n3. Insert Data Sekaligus\n4. Get Data Profilings\n5. Get Data Employee\n6. Get Data Education by Major");
+        Console.WriteLine("1. University\n2. Education\n3. Insert Data Sekaligus\n4. Get Data Profilings\n5. Get Data Employee");
         var choice = Console.ReadLine();
         switch (choice)
         {
@@ -90,7 +90,7 @@ public class MenuView
                 university.Name = Console.ReadLine();
 
                 var insert = new EmployeeController();
-                /*insert.InsertByQuery(employee, university, education);*/
+                insert.InsertEmployeeC(employee, university, education);
                 break;
 
 
@@ -147,12 +147,6 @@ public class MenuView
                     Console.WriteLine("========================================");
                 }
 
-                break;
-
-            case "6":
-                Console.WriteLine("Masukkan NIK : ");
-                var nik2 = Console.ReadLine();
-                employee.GetIdByNikEmployee(nik2);
                 break;
         }
 
