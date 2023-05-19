@@ -20,142 +20,45 @@ public class MenuView
         var newChoice = "";
         Console.WriteLine("Selamat datang, Admin!");
         Console.WriteLine("Silahkan pilih data yang ingin dimasukkan :");
-        Console.WriteLine("1. University\n2. Education\n3. Insert Data Sekaligus\n4. Get Data Profilings\n5. Get Data Employee");
+        Console.WriteLine("1. University\n2. Education\n3. Insert data all at once\n4. Get Data Profilings\n5. Get Data Employee");
         var choice = Console.ReadLine();
         switch (choice)
         {
             case "1":
                 Console.Clear();
-                Console.WriteLine("Silahkan pilih menu :");
-                Console.WriteLine("1. Tambah data Universitas\n2. Get All Universitas\n3. Get By ID Universitas\n4. Update Nama Universitas\n5. Delete Universitas");
-                newChoice = Console.ReadLine();
-                GetMenuUniv(newChoice);
+                GetMenuUniv(university, newChoice);
                 break;
 
             case "2":
                 Console.Clear();
-                Console.WriteLine("Silahkan pilih menu :");
-                Console.WriteLine("1. Tambah data education\n2. Get All Educations\n3. Get By ID Education\n4. Update Educations\n5. Delete Education");
-                newChoice = Console.ReadLine();
-                GetMenuEdu(newChoice);
+                GetMenuEdu(education, newChoice);
                 break;
 
             case "3":
                 Console.Clear();
-                Console.WriteLine("Berikut adalah list nama department: ");
-                var resultsDepart = department.GetDepartments();
-                foreach (var resultDep in resultsDepart)
-                {
-                    Console.WriteLine("Id : " + resultDep.Id);
-                    Console.WriteLine("Nama : " + resultDep.Name);
-                }
-                Console.WriteLine("================================");
-                Console.WriteLine("Berikut adalah list nama universitas: ");
-                var resultsuniv = university.GetUniversities();
-                foreach (var resultUnivall in resultsuniv)
-                {
-                    Console.WriteLine("Id : " + resultUnivall.Id);
-                    Console.WriteLine("Nama : " + resultUnivall.Name);
-                }
-                Console.WriteLine("================================");
-                Console.WriteLine("Masukkan data-data berikut: ");
-                Console.Write("NIK         : ");
-                var nik = Console.ReadLine();
-                employee.Nik = nik;
-                Console.Write("First Name  : ");
-                employee.FirstName = Console.ReadLine();
-                Console.Write("Last Name   : ");
-                employee.LastName = Console.ReadLine();
-                Console.Write("Birthdate   : ");
-                var birthdate = Console.ReadLine();
-                employee.Birthdate = DateTime.Parse(birthdate);
-                Console.Write("Gender  : (lk/pr)");
-                employee.Gender = Console.ReadLine();
-                Console.Write("Hiring Date : ");
-                var hiringDate = Console.ReadLine();
-                employee.HiringDate = DateTime.Parse(hiringDate);
-                Console.Write("Email   : ");
-                employee.Email = Console.ReadLine();
-                Console.Write("Phone Number   : ");
-                employee.PhoneMumber = Console.ReadLine();
-                Console.Write("Department ID  :");
-                employee.DepartmentId = Console.ReadLine();
-                Console.Write("Major        : ");
-                education.Major = Console.ReadLine();
-                Console.Write("Degree       : ");
-                education.Degree = Console.ReadLine();
-                Console.Write("GPA          : ");
-                education.Gpa = Console.ReadLine();
-                Console.Write("University Name   :");
-                university.Name = Console.ReadLine();
-
-                var insert = new EmployeeController();
-                insert.InsertEmployeeC(employee, university, education);
+                GetMenuInsertAll(university, department, employee, education);
                 break;
 
 
             case "4":
                 Console.Clear();
-                var resultProfilings = profiling.GetProfilings();
-                foreach (var resultsProf in resultProfilings)
-                {
-                    Console.WriteLine("Employee ID : " + resultsProf.EmployeeId);
-                    Console.WriteLine("Education ID : " + resultsProf.EducationId);
-                }
+                GetMenuProfilings(profiling);
                 break;
 
             case "5":
                 Console.Clear();
-                Console.WriteLine("===========================");
-                Console.WriteLine("       Data Employee        ");
-                Console.WriteLine("===========================");
-                var getProfilings = profiling.GetProfilings();
-                var getEmployee = employee.GetEmployees();
-                var getEducation = education.GetEducations();
-                var getUniversity = university.GetUniversities();
-                var showEmployee = from prof in getProfilings
-                                   join emp in getEmployee on prof.EmployeeId equals emp.Id
-                                   join edu in getEducation on prof.EducationId equals edu.Id
-                                   join univ in getUniversity on edu.UniversityId equals univ.Id
-                                   select new
-                                   {
-                                       nik = emp.Nik,
-                                       full_name = emp.FirstName + " " + emp.LastName,
-                                       birthdate = emp.Birthdate,
-                                       gender = emp.Gender,
-                                       hiringdate = emp.HiringDate,
-                                       email = emp.Email,
-                                       phonenumber = emp.PhoneMumber,
-                                       major = edu.Major,
-                                       degree = edu.Degree,
-                                       gpa = edu.Gpa,
-                                       univName = univ.Name
-                                   };
-                foreach (var i in showEmployee)
-                {
-                    Console.WriteLine($"NIK                 : {i.nik}");
-                    Console.WriteLine($"Fullname            : {i.full_name}");
-                    Console.WriteLine($"Birthdate           : {i.birthdate}");
-                    Console.WriteLine($"Gender              : {i.gender}");
-                    Console.WriteLine($"Hiring Date         : {i.hiringdate}");
-                    Console.WriteLine($"Email               : {i.email}");
-                    Console.WriteLine($"Phone Number        : {i.phonenumber}");
-                    Console.WriteLine($"Major               : {i.major}");
-                    Console.WriteLine($"Degree              : {i.degree}");
-                    Console.WriteLine($"GPA                 : {i.gpa}");
-                    Console.WriteLine($"University Name     : {i.univName}");
-                    Console.WriteLine("========================================");
-                }
-
+                GetMenuEmployeeWithLinq(profiling, education, university, employee);
                 break;
         }
 
 
     }
 
-    public void GetMenuUniv(string secondChoice)
+    public void GetMenuUniv(University university, string secondChoice)
     {
-        var university = new University();
+        Console.WriteLine("Silahkan pilih menu :");
+        Console.WriteLine("1. Tambah data Universitas\n2. Get All Universitas\n3. Get By ID Universitas\n4. Update Nama Universitas\n5. Delete Universitas");
+        secondChoice = Console.ReadLine();
         if (secondChoice == "1")
         {
             Console.Clear();
@@ -235,9 +138,11 @@ public class MenuView
         }
     }
 
-    public void GetMenuEdu(string secondChoice)
+    public void GetMenuEdu(Education education, string secondChoice)
     {
-        var education = new Education();
+        Console.WriteLine("Silahkan pilih menu :");
+        Console.WriteLine("1. Tambah data education\n2. Get All Educations\n3. Get By ID Education\n4. Update Educations\n5. Delete Education");
+        secondChoice = Console.ReadLine();
         if (secondChoice == "1")
         {
             Console.Clear();
@@ -346,5 +251,116 @@ public class MenuView
                 Console.WriteLine("Delete failed!");
             }
         }
+    }
+
+    public void GetMenuInsertAll(University university, Department department, Employee employee, Education education)
+    {
+        Console.WriteLine("Berikut adalah list nama department: ");
+        var resultsDepart = department.GetDepartments();
+        foreach (var resultDep in resultsDepart)
+        {
+            Console.WriteLine("Id : " + resultDep.Id);
+            Console.WriteLine("Nama : " + resultDep.Name);
+        }
+        Console.WriteLine("================================");
+        Console.WriteLine("Berikut adalah list nama universitas: ");
+        var resultsuniv = university.GetUniversities();
+        foreach (var resultUnivall in resultsuniv)
+        {
+            Console.WriteLine("Id : " + resultUnivall.Id);
+            Console.WriteLine("Nama : " + resultUnivall.Name);
+        }
+        Console.WriteLine("================================");
+        Console.WriteLine("Masukkan data-data berikut: ");
+        Console.Write("NIK         : ");
+        var nik = Console.ReadLine();
+        employee.Nik = nik;
+        Console.Write("First Name  : ");
+        employee.FirstName = Console.ReadLine();
+        Console.Write("Last Name   : ");
+        employee.LastName = Console.ReadLine();
+        Console.Write("Birthdate   : ");
+        var birthdate = Console.ReadLine();
+        employee.Birthdate = DateTime.Parse(birthdate);
+        Console.Write("Gender  : (lk/pr)");
+        employee.Gender = Console.ReadLine();
+        Console.Write("Hiring Date : ");
+        var hiringDate = Console.ReadLine();
+        employee.HiringDate = DateTime.Parse(hiringDate);
+        Console.Write("Email   : ");
+        employee.Email = Console.ReadLine();
+        Console.Write("Phone Number   : ");
+        employee.PhoneMumber = Console.ReadLine();
+        Console.Write("Department ID  :");
+        employee.DepartmentId = Console.ReadLine();
+        Console.Write("Major        : ");
+        education.Major = Console.ReadLine();
+        Console.Write("Degree       : ");
+        education.Degree = Console.ReadLine();
+        Console.Write("GPA          : ");
+        education.Gpa = Console.ReadLine();
+        Console.Write("University Name   :");
+        university.Name = Console.ReadLine();
+
+        var insert = new EmployeeController();
+        insert.InsertEmployeeC(employee, university, education);
+
+    }
+
+    public void GetMenuProfilings(Profiling profiling)
+    {
+        var resultProfilings = profiling.GetProfilings();
+        foreach (var resultsProf in resultProfilings)
+        {
+            Console.WriteLine("Employee ID : " + resultsProf.EmployeeId);
+            Console.WriteLine("Education ID : " + resultsProf.EducationId);
+        }
+
+    }
+
+    public void GetMenuEmployeeWithLinq(Profiling profiling, Education education, University university, Employee employee)
+    {
+
+        Console.WriteLine("===========================");
+        Console.WriteLine("       Data Employee        ");
+        Console.WriteLine("===========================");
+        var getProfilings = profiling.GetProfilings();
+        var getEmployee = employee.GetEmployees();
+        var getEducation = education.GetEducations();
+        var getUniversity = university.GetUniversities();
+        var showEmployee = from prof in getProfilings
+                           join emp in getEmployee on prof.EmployeeId equals emp.Id
+                           join edu in getEducation on prof.EducationId equals edu.Id
+                           join univ in getUniversity on edu.UniversityId equals univ.Id
+                           select new
+                           {
+                               nik = emp.Nik,
+                               full_name = emp.FirstName + " " + emp.LastName,
+                               birthdate = emp.Birthdate,
+                               gender = emp.Gender,
+                               hiringdate = emp.HiringDate,
+                               email = emp.Email,
+                               phonenumber = emp.PhoneMumber,
+                               major = edu.Major,
+                               degree = edu.Degree,
+                               gpa = edu.Gpa,
+                               univName = univ.Name
+                           };
+        foreach (var i in showEmployee)
+        {
+            Console.WriteLine($"NIK                 : {i.nik}");
+            Console.WriteLine($"Fullname            : {i.full_name}");
+            Console.WriteLine($"Birthdate           : {i.birthdate}");
+            Console.WriteLine($"Gender              : {i.gender}");
+            Console.WriteLine($"Hiring Date         : {i.hiringdate}");
+            Console.WriteLine($"Email               : {i.email}");
+            Console.WriteLine($"Phone Number        : {i.phonenumber}");
+            Console.WriteLine($"Major               : {i.major}");
+            Console.WriteLine($"Degree              : {i.degree}");
+            Console.WriteLine($"GPA                 : {i.gpa}");
+            Console.WriteLine($"University Name     : {i.univName}");
+            Console.WriteLine("========================================");
+        }
+
     }
 }

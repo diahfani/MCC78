@@ -11,7 +11,7 @@ namespace BookingRooms;
 public class Program
 {
     // pake store procedure
-    public static int InsertAllAtOnce(Employee employee, University universities, Education educations)
+    /*public static int InsertAllAtOnce(Employee employee, University universities, Education educations)
     {
         int result = 0;
         using SqlConnection connection = Connection.GetConnection();
@@ -162,7 +162,7 @@ public class Program
         // return new List<Universities>();
         return result;
     }
-
+*/
     public static void Main()
     {
         var getMenu = new MenuView();

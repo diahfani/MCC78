@@ -1,14 +1,20 @@
-﻿namespace WebAPI.Model
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebAPI.Model;
+
+[Table("tb_m_accounts")]
+public class Account : BaseEntity
 {
-    public class Account
-    {
-        public Guid Guid { get; set; }
-        public string Password { get; set; }
-        public bool IsDeleted { get; set; }
-        public int Otp { get; set; }
-        public bool IsUsed { get; set; }
-        public DateTime ExpiredDate { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
-    }
+    [Column("password")]
+    public string Password { get; set; }
+    [Column("is_deleted")]
+    public bool IsDeleted { get; set; }
+    [Column("otp")]
+    public int OTP { get; set; }
+    [Column("is_used")]
+    public bool IsUsed { get; set; }
+    [Column("expired_time")]
+    public DateTime ExpiredDate { get; set; }
+    public Employee? Employee { get; set; }
+    public ICollection<AccountRole>? AccountRoles { get; set; }
 }

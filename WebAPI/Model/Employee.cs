@@ -1,17 +1,29 @@
-﻿namespace WebAPI.Model
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using WebAPI.Utility;
+
+namespace WebAPI.Model;
+
+[Table("tb_m_employees")]
+public class Employee : BaseEntity
 {
-    public class Employee
-    {
-        public Guid Guid { get; set; }
-        public string nik { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public int Gender { get; set; }
-        public DateTime HiringDate { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
-    }
+    [Column("nik", TypeName = "nchar(6)")]
+    public string nik { get; set; }
+    [Column("first_name", TypeName = "nchar(100)")]
+    public string FirstName { get; set; }
+    // (?) atau mark question berarti nullable
+    [Column("last_name", TypeName = "nchar(100)")]
+    public string? LastName { get; set; }
+    [Column("birth_date")]
+    public DateTime BirthDate { get; set; }
+    [Column("gender")]
+    public GenderLevel Gender { get; set; }
+    [Column("hiring_date")]
+    public DateTime HiringDate { get; set; }
+    [Column("email", TypeName = "nvarchar(100)")]
+    public string Email { get; set; }
+    [Column("phone_number", TypeName ="nvarchar(20)")]
+    public string PhoneNumber { get; set; }
+    public Education? Education { get; set; }
+    public Account? Account { get; set; }
+    public ICollection<Booking>? Bookings { get; set; }
 }

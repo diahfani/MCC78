@@ -1,11 +1,14 @@
-﻿namespace WebAPI.Model
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebAPI.Model;
+
+[Table("tb_m_universities")]
+
+public class University : BaseEntity
 {
-    public class University
-    {
-        public Guid Guid { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
-    }
+    [Column("code", TypeName = "nvarchar(50)")]
+    public string Code { get; set; }
+    [Column("name", TypeName = "nvarchar(100)")]
+    public string Name { get; set; }
+    public ICollection<Education>? Educations { get; set; }
 }
