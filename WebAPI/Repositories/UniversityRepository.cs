@@ -4,7 +4,7 @@ using WebAPI.Model;
 
 namespace WebAPI.Repositories;
 
-public class UniversityRepository : IUniversityRepository
+public class UniversityRepository : IGenericRepository<University>
 {
     // panggil context dari bookingroomdbcontext
     private readonly BookingRoomsDBContext _context;

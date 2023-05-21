@@ -10,8 +10,8 @@ namespace WebAPI.Controllers;
 
 public class RoomController : ControllerBase
 {
-    private readonly IRoomRepository _roomRepository;
-    public RoomController(IRoomRepository roomRepository)
+    private readonly IGenericRepository<Room> _roomRepository;
+    public RoomController(IGenericRepository<Room> roomRepository)
     {
         _roomRepository = roomRepository;
     }

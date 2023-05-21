@@ -4,7 +4,7 @@ using WebAPI.Model;
 
 namespace WebAPI.Repositories;
 
-public class AccountRoleRepository : IAccountRoleRepository
+public class AccountRoleRepository : IGenericRepository<AccountRole>
 {
     private readonly BookingRoomsDBContext _context;
     public AccountRoleRepository(BookingRoomsDBContext context)
