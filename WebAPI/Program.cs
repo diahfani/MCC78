@@ -17,14 +17,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<BookingRoomsDBContext>(options => options.UseSqlServer(connectionString));
 
 // tambahin repositori
-builder.Services.AddScoped<IGenericRepository<University>, UniversityRepository>();
-builder.Services.AddScoped<IGenericRepository<Room>, RoomRepository>();
-builder.Services.AddScoped<IGenericRepository<Role>, RoleRepository>();
-builder.Services.AddScoped<IGenericRepository<Employee>, EmployeeRepository>();
-builder.Services.AddScoped<IGenericRepository<Account>, AccountRepository>();
-builder.Services.AddScoped<IGenericRepository<Booking>, BookingRepository>();
-builder.Services.AddScoped<IGenericRepository<Education>, EducationRepository>();
-builder.Services.AddScoped<IGenericRepository<AccountRole>, AccountRoleRepository>();
+
+builder.Services.AddScoped<IGenericRepository<University>, GenericRepository<University>>();
+builder.Services.AddScoped<IGenericRepository<Room>, GenericRepository<Room>>();
+builder.Services.AddScoped<IGenericRepository<Role>, GenericRepository<Role>>();
+builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
+builder.Services.AddScoped<IGenericRepository<Account>, GenericRepository<Account>>();
+builder.Services.AddScoped<IGenericRepository<Booking>, GenericRepository<Booking>>();
+builder.Services.AddScoped<IGenericRepository<Education>, GenericRepository<Education>>();
+builder.Services.AddScoped<IGenericRepository<AccountRole>, GenericRepository<AccountRole>>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
