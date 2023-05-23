@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.Repositories;
+using WebAPI.ViewModels.Accounts;
+using WebAPI.ViewModels.Booking;
+using WebAPI.ViewModels.Employees;
+using WebAPI.ViewModels.Universities;
 
 namespace WebAPI.Controllers;
 
@@ -8,10 +13,28 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class EmployeeController : ControllerBase
 {
-    private readonly IGenericRepository<Employee> _employeeRepository;
-    public EmployeeController(IGenericRepository<Employee> employeeRepository)
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IMapper<Employee, EmployeeVM> _mapper;
+    private readonly IMapper<Account, AccountVM> _accountMapper;
+    public EmployeeController(IEmployeeRepository employeeRepository, IMapper<Employee, EmployeeVM> mapper,
+        IAccountRepository accountRepository, IMapper<Account, AccountVM> accountMapper)
     {
         _employeeRepository = employeeRepository;
+        _mapper = mapper;
+        _accountMapper = accountMapper;
+        _accountRepository = accountRepository;
+    }
+
+    [HttpGet("byEmail/{email}")]
+    public IActionResult GetByEmail(string email)
+    {
+        var emailEmployee = _employeeRepository.GetByEmail(email);
+        if (emailEmployee is null)
+        {
+            return NotFound();
+        }
+        return Ok(emailEmployee);
     }
 
     [HttpGet]
@@ -22,7 +45,9 @@ public class EmployeeController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(employee);
+        var resultConverted = employee.Select(_mapper.Map).ToList();
+
+        return Ok(resultConverted);
     }
 
     [HttpGet("{guid}")]
@@ -33,14 +58,16 @@ public class EmployeeController : ControllerBase
         {
             return NotFound();
         }
+        var data = _mapper.Map(employee);
 
-        return Ok(employee);
+        return Ok(data);
     }
 
     [HttpPost]
-    public IActionResult Create(Employee employee)
+    public IActionResult Create(EmployeeVM employeeVM)
     {
-        var result = _employeeRepository.Create(employee);
+        var employeeConverted = _mapper.Map(employeeVM);
+        var result = _employeeRepository.Create(employeeConverted);
         if (result is null)
         {
             return BadRequest();
@@ -50,9 +77,10 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update(Employee employee)
+    public IActionResult Update(EmployeeVM employeeVM)
     {
-        var isUpdated = _employeeRepository.Update(employee);
+        var employeeConverted = _mapper.Map(employeeVM);
+        var isUpdated = _employeeRepository.Update(employeeConverted);
         if (!isUpdated)
         {
             return BadRequest();

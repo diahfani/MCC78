@@ -2,11 +2,8 @@
 
 namespace WebAPI.Contracts;
 
-public interface IEducationRepository
+public interface IEducationRepository : IGenericRepository<Education>
 {
-    Education Create(Education education);
-    bool Update(Education education);
-    bool Delete(Guid guid);
-    IEnumerable<Education> GetAll();
-    Education? GetByGuid(Guid guid);
+    IEnumerable<Education> GetByUniversityGuid(Guid universityGuid);
 }
+

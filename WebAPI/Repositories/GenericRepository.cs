@@ -1,4 +1,5 @@
-﻿using WebAPI.Context;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using WebAPI.Context;
 using WebAPI.Contracts;
 using WebAPI.Model;
 
@@ -6,7 +7,7 @@ namespace WebAPI.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly BookingRoomsDBContext _context;
+    protected readonly BookingRoomsDBContext _context;
     public GenericRepository(BookingRoomsDBContext context)
     {
         _context = context;
@@ -16,6 +17,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         try
         {
+            typeof(T).GetProperty("CreatedDate")!.SetValue(item, DateTime.Now);
+            typeof(T).GetProperty("ModifiedDate")!.SetValue(item, DateTime.Now);
             // add itu method dari linq
             _context.Set<T>().Add(item);
             _context.SaveChanges();
@@ -53,13 +56,25 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public T? GetByGuid(Guid guid)
     {
-        return _context.Set<T>().Find(guid);
+        var entity = _context.Set<T>().Find(guid);
+        _context.ChangeTracker.Clear();
+        return entity;
     }
 
     public bool Update(T item)
     {
         try
         {
+            var guid = (Guid)typeof(T).GetProperty("Guid")!.GetValue(item)!;
+            var oldEntity = GetByGuid(guid);
+            if (oldEntity == null)
+            {
+                return false;
+            }
+
+            var getCreatedDate = typeof(T).GetProperty("CreatedDate")!.GetValue(oldEntity)!;
+            typeof(T).GetProperty("CreatedDate")!.SetValue(item, getCreatedDate);
+            typeof(T).GetProperty("ModifiedDate")!.SetValue(item, DateTime.Now);
             _context.Set<T>().Update(item);
             _context.SaveChanges();
             return true;

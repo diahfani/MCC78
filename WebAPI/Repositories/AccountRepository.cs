@@ -1,72 +1,37 @@
 ﻿using WebAPI.Context;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.ViewModels.Employees;
+using WebAPI.ViewModels.Login;
 
 namespace WebAPI.Repositories;
 
-public class AccountRepository : IGenericRepository<Account>
+public class AccountRepository : GenericRepository<Account>, IAccountRepository
 {
-    private readonly BookingRoomsDBContext _context;
-    public AccountRepository(BookingRoomsDBContext context)
+    private readonly IEmployeeRepository _employeeRepository;
+    public AccountRepository(BookingRoomsDBContext context, IEmployeeRepository employeeRepository) : base(context)
     {
-        _context = context;
+        _employeeRepository = employeeRepository;
+    }
+    public IEnumerable<Account> GetByEmployeeGuid(Guid employeeGuid)
+    {
+        return _context.Set<Account>().Where(a => a.Employee.Guid == employeeGuid);
     }
 
-    public Account Create(Account account)
+    public AccountEmployeeVM Login(LoginVM loginVM)
     {
-        try
-        {
-            // add itu method dari linq
-            _context.Set<Account>().Add(account);
-            _context.SaveChanges();
-            return account;
-        }
-        catch
-        {
-            return new Account();
-        }
-    }
+        var account = GetAll();
+        var employee = _employeeRepository.GetAll();
+        var query = from emp in employee
+                    join acc in account
+                    on emp.Guid equals acc.Guid
+                    where emp.Email == loginVM.Email
+                    select new AccountEmployeeVM
+                    {
+                        Email = emp.Email,
+                        Password = acc.Password
+                    };
 
-    public bool Delete(Guid guid)
-    {
-        try
-        {
-            var account = GetByGuid(guid);
-            if (account  == null)
-            {
-                return false;
-            }
-            _context.Set<Account>().Remove(account);
-            _context.SaveChanges();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    public IEnumerable<Account> GetAll()
-    {
-        return _context.Set<Account>().ToList();
-    }
-
-    public Account? GetByGuid(Guid guid)
-    {
-        return _context.Set<Account>().Find(guid);
-    }
-
-    public bool Update(Account account)
-    {
-        try
-        {
-            _context.Set<Account>().Update(account);
-            _context.SaveChanges();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        return query.FirstOrDefault();
     }
 }

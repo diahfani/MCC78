@@ -1,12 +1,12 @@
 ﻿using WebAPI.Model;
+using WebAPI.ViewModels.Employees;
+using WebAPI.ViewModels.Login;
 
 namespace WebAPI.Contracts;
 
-public interface IAccountRepository
+public interface IAccountRepository : IGenericRepository<Account>
 {
-    Account Create(Account account);
-    bool Update(Account account);
-    bool Delete(Guid guid);
-    IEnumerable<Account> GetAll();
-    Account? GetByGuid(Guid guid);
+    /*IEnumerable<Account> GetByEmployeeGuid(Guid employeeGuid);*/
+    AccountEmployeeVM Login(LoginVM loginVM);
+
 }

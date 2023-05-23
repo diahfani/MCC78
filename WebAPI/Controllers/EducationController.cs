@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.Utility;
+using WebAPI.ViewModels.Educations;
+using WebAPI.ViewModels.Universities;
 
 namespace WebAPI.Controllers;
 
@@ -8,10 +11,12 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class EducationController : ControllerBase
 {
-    private readonly IGenericRepository<Education> _educationRepository;
-    public EducationController(IGenericRepository<Education> educationRepository)
+    private readonly IEducationRepository _educationRepository;
+    private readonly IMapper<Education, EducationVM> _educationMapper;
+    public EducationController(IEducationRepository educationRepository, IMapper<Education, EducationVM> educationMapper)
     {
         _educationRepository = educationRepository;
+        _educationMapper = educationMapper;
     }
 
     [HttpGet]
@@ -22,7 +27,8 @@ public class EducationController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(education);
+        var data = education.Select(_educationMapper.Map).ToList();
+        return Ok(data);
     }
 
     [HttpGet("{guid}")]
@@ -33,14 +39,17 @@ public class EducationController : ControllerBase
         {
             return NotFound();
         }
+        var data = _educationMapper.Map(education);
 
-        return Ok(education);
+        return Ok(data);
+
     }
 
     [HttpPost]
-    public IActionResult Create(Education education)
+    public IActionResult Create(EducationVM educationVM)
     {
-        var result = _educationRepository.Create(education);
+        var educationConvert = _educationMapper.Map(educationVM);
+        var result = _educationRepository.Create(educationConvert);
         if (result is null)
         {
             return BadRequest();
@@ -50,9 +59,10 @@ public class EducationController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Update(Education education)
+    public IActionResult Update(EducationVM educationVM)
     {
-        var isUpdated = _educationRepository.Update(education);
+        var educationConvert = _educationMapper.Map(educationVM);
+        var isUpdated = _educationRepository.Update(educationConvert);
         if (!isUpdated)
         {
             return BadRequest();

@@ -2,7 +2,7 @@
 
 namespace WebAPI.Contracts;
 
-public interface IRoomRepository
+public interface IRoomRepository : IGenericRepository<Room>
 {
     Room Create(Room room);
     bool Update(Room room);
