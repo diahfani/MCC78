@@ -44,6 +44,18 @@ public class BookingController : ControllerBase
         return Ok(data);
     }
 
+    [HttpGet("bookinglength")]
+    public IActionResult GetBookingLength()
+    {
+        var bookingLengths = _bookingRepository.GetBookingLength();
+        if (!bookingLengths.Any())
+        {
+            return NotFound();
+        }
+
+        return Ok(bookingLengths);
+    }
+
     [HttpPost]
     public IActionResult Create(BookingVM bookingVM)
     {

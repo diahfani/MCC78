@@ -1,12 +1,55 @@
 ﻿using WebAPI.Context;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.ViewModels.Bookings;
 
 namespace WebAPI.Repositories;
 
 public class BookingRepository : GenericRepository<Booking>, IBookingRepository
 {
-    public BookingRepository(BookingRoomsDBContext context) : base(context)
+    private readonly IRoomRepository _roomRepository;
+    public BookingRepository(BookingRoomsDBContext context, IRoomRepository roomRepository) : base(context)
     {
+        _roomRepository = roomRepository;
+    }
+
+    private int CalculateBookingLength(DateTime startDate, DateTime endDate)
+    {
+        int totalDays = 0; // Untuk menghitung hari
+        DateTime currentDate = startDate.Date; // Perhitungan tergantung dari tanggal yang digunakan
+
+        while (currentDate <= endDate.Date)
+        {
+            // Mengecek apakah currentDate adalah hari kerja (Selain sabtu dan minggu) 
+            if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
+            {
+                // Jika currentDate hari kerja, totalDays bertambah
+                totalDays++;
+            }
+            currentDate = currentDate.AddDays(1); // untuk maju ke tanggal berikutnya.
+        }
+
+        return totalDays;
+    }
+
+
+    public IEnumerable<BookingRoomVM> GetBookingLength()
+    {
+        /* Menampung semua data room di var rooms*/
+        var rooms = _roomRepository.GetAll();
+
+        /* Mengambil semua data booking, selanjutnya menggunakan Where pada LINQ untuk memnfilter agar 
+           pemesanan dimulai pada hari selain Sabtu dan Minggu */
+        var bookings = GetAll();
+
+        /* Melakukan instance/membuat object untuk setiap pemesanan yang memenuhi kondisi diatas..
+           Pada part ini, value RoomName akan diisi dengan nama Room yang dicari berdasarkan RoomGuid. */
+        var bookingLengths = bookings.Select(b => new BookingRoomVM
+        {
+            RoomName = rooms.FirstOrDefault(r => r.Guid == b.RoomGuid)?.Name, // Di set menjadi (?) untuk memastikan tidak terjadi kesalahan ketika objek tidak ditemukan, sehingga valuenya akan otomatis NULL
+            BookingLength = CalculateBookingLength(b.StartDate, b.EndDate)
+        });
+
+        return bookingLengths;
     }
 }

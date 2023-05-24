@@ -13,12 +13,8 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
         _employeeRepository = employeeRepository;
     }
-    public IEnumerable<Account> GetByEmployeeGuid(Guid employeeGuid)
-    {
-        return _context.Set<Account>().Where(a => a.Employee.Guid == employeeGuid);
-    }
 
-    public AccountEmployeeVM Login(LoginVM loginVM)
+    public LoginVM Login(LoginVM loginVM)
     {
         var account = GetAll();
         var employee = _employeeRepository.GetAll();
@@ -26,7 +22,7 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
                     join acc in account
                     on emp.Guid equals acc.Guid
                     where emp.Email == loginVM.Email
-                    select new AccountEmployeeVM
+                    select new LoginVM
                     {
                         Email = emp.Email,
                         Password = acc.Password

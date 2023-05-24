@@ -6,7 +6,6 @@ namespace WebAPI.Contracts;
 
 public interface IAccountRepository : IGenericRepository<Account>
 {
-    /*IEnumerable<Account> GetByEmployeeGuid(Guid employeeGuid);*/
-    AccountEmployeeVM Login(LoginVM loginVM);
+    LoginVM Login(LoginVM loginVM);
 
 }
