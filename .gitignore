@@ -46,6 +46,7 @@ Generated\ Files/
 [Bb]uild[Ll]og.*
 
 WebAPI/Migrations
+WebAPI/appsettings.json
 
 # NUnit
 *.VisualState.xml

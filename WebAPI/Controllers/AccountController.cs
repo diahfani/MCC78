@@ -68,8 +68,8 @@ public class AccountController : GenericController<Account, AccountVM>
                 Data = null
             });
         }
-
-        if (query.Password != loginVM.Password)
+        var validatePassword = Hashing.ValidatePassword(loginVM.Password, query.Password);
+        if (validatePassword is false)
         {
             return BadRequest(new ResponseVM<LoginVM>
             {

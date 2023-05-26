@@ -1,6 +1,7 @@
 ﻿using WebAPI.Context;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.Utility;
 using WebAPI.ViewModels.Accounts;
 using WebAPI.ViewModels.Employees;
 using WebAPI.ViewModels.Login;
@@ -117,10 +118,11 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
             };
             _educationRepository.Create(education);
 
+            var hashPassword = Hashing.HashPassword(registerVM.Password);
             var account = new Account
             {
                 Guid = employee.Guid,
-                Password = registerVM.Password,
+                Password = hashPassword,
                 IsDeleted = false,
                 IsUsed = true,
                 OTP = 0
