@@ -1,4 +1,5 @@
 ﻿using WebAPI.Model;
+using WebAPI.ViewModels.Educations;
 
 namespace WebAPI.Contracts;
 

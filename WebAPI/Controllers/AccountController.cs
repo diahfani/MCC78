@@ -16,22 +16,22 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AccountController : ControllerBase
+public class AccountController : GenericController<Account, AccountVM>
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IEmployeeRepository _employeeRepository;
-    private readonly IMapper<Account, AccountVM> _mapper;
-    public AccountController(IEmployeeRepository employeeRepository, IAccountRepository accountRepository, IMapper<Account, AccountVM> mapper)
+    /*private readonly IMapper<Account, AccountVM> _mapper;*/
+    public AccountController(IEmployeeRepository employeeRepository, IAccountRepository accountRepository, IMapper<Account, AccountVM> mapper) : base(accountRepository, mapper)
     {
         _accountRepository = accountRepository;
         _employeeRepository = employeeRepository;
-        _mapper = mapper;
+        /*_mapper = mapper;*/
     }
 
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult GetAll()
     {
-        var account = _accountRepository.GetAll();
+        var account = _repository.GetAll();
         if (!account.Any())
         {
             return NotFound(new ResponseVM<AccountVM>
@@ -52,7 +52,7 @@ public class AccountController : ControllerBase
             Data = resultConverted,
         });
     }
-
+*/
     [HttpPost("login")]
     public IActionResult Login(LoginVM loginVM)
     {
@@ -60,7 +60,7 @@ public class AccountController : ControllerBase
 
         if (query == null)
         {
-            return BadRequest(new ResponseVM<AccountVM>
+            return BadRequest(new ResponseVM<LoginVM>
             {
                 Code = StatusCodes.Status400BadRequest,
                 Status = HttpStatusCode.BadRequest.ToString(),
@@ -71,7 +71,7 @@ public class AccountController : ControllerBase
 
         if (query.Password != loginVM.Password)
         {
-            return BadRequest(new ResponseVM<AccountVM>
+            return BadRequest(new ResponseVM<LoginVM>
             {
                 Code = StatusCodes.Status400BadRequest,
                 Status = HttpStatusCode.BadRequest.ToString(),
@@ -79,7 +79,7 @@ public class AccountController : ControllerBase
                 Data = null
             });
         }
-        return Ok(new ResponseVM<AccountVM>
+        return Ok(new ResponseVM<LoginVM>
         {
             Code = StatusCodes.Status200OK,
             Status = HttpStatusCode.OK.ToString(),
@@ -97,7 +97,7 @@ public class AccountController : ControllerBase
         switch (result)
         {
             case 0:
-                return BadRequest(new ResponseVM<AccountVM>
+                return BadRequest(new ResponseVM<RegisterVM>
                 {
                     Code = StatusCodes.Status400BadRequest,
                     Status = HttpStatusCode.BadRequest.ToString(),
@@ -105,7 +105,7 @@ public class AccountController : ControllerBase
                     Data = null
                 }); ;
             case 1:
-                return BadRequest(new ResponseVM<AccountVM>
+                return BadRequest(new ResponseVM<RegisterVM>
                 {
                     Code = StatusCodes.Status400BadRequest,
                     Status = HttpStatusCode.BadRequest.ToString(),
@@ -113,7 +113,7 @@ public class AccountController : ControllerBase
                     Data = null
                 });
             case 2:
-                return BadRequest(new ResponseVM<AccountVM>
+                return BadRequest(new ResponseVM<RegisterVM>
                 {
                     Code = StatusCodes.Status400BadRequest,
                     Status = HttpStatusCode.BadRequest.ToString(),
@@ -121,7 +121,7 @@ public class AccountController : ControllerBase
                     Data = null
                 });
             case 3:
-                return Ok(new ResponseVM<AccountVM>
+                return Ok(new ResponseVM<RegisterVM>
                 {
                     Code = StatusCodes.Status200OK,
                     Status = HttpStatusCode.OK.ToString(),
@@ -130,7 +130,7 @@ public class AccountController : ControllerBase
                 });
         }
 
-        return BadRequest(new ResponseVM<AccountVM>
+        return BadRequest(new ResponseVM<RegisterVM>
         {
             Code = StatusCodes.Status400BadRequest,
             Status = HttpStatusCode.BadRequest.ToString(),
@@ -264,10 +264,10 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpGet("{guid}")]
+    /*[HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
-        var account = _accountRepository.GetByGuid(guid);
+        var account = _repository.GetByGuid(guid);
         if (account is null)
         {
             return NotFound(new ResponseVM<AccountVM>
@@ -289,12 +289,12 @@ public class AccountController : ControllerBase
         });
 
     }
-
-    [HttpPost]
+*/
+    /*[HttpPost]
     public IActionResult Create(AccountVM accountVM)
     {
         var accountConverted = _mapper.Map(accountVM);
-        var result = _accountRepository.Create(accountConverted);
+        var result = _repository.Create(accountConverted);
         if (result is null)
         {
             return BadRequest(new ResponseVM<AccountVM>
@@ -314,12 +314,12 @@ public class AccountController : ControllerBase
             Data = null,
         });
     }
-
-    [HttpPut]
+*/
+    /*[HttpPut]
     public IActionResult Update(AccountVM accountVM)
     {
         var accountConvert = _mapper.Map(accountVM);
-        var isUpdated = _accountRepository.Update(accountConvert);
+        var isUpdated = _repository.Update(accountConvert);
         if (!isUpdated)
         {
             return BadRequest(new ResponseVM<AccountVM>
@@ -339,11 +339,11 @@ public class AccountController : ControllerBase
             Data = null,
         });
     }
-
-    [HttpDelete("{guid}")]
+*/
+    /*[HttpDelete("{guid}")]
     public IActionResult Delete(Guid guid)
     {
-        var isDeleted = _accountRepository.Delete(guid);
+        var isDeleted = _repository.Delete(guid);
         if (!isDeleted)
         {
             return BadRequest(new ResponseVM<AccountVM>
@@ -362,6 +362,6 @@ public class AccountController : ControllerBase
             Message = "Data successfully deleted!",
             Data = null,
         });
-    }
+    }*/
 
 }
