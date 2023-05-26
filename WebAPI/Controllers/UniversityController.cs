@@ -128,7 +128,7 @@ public class UniversityController : ControllerBase
         });
     }
 
-    [HttpGet("byName/{name}")]
+    /*[HttpGet("byName/{name}")]
     public IActionResult GetByName(string name)
     {
         var nameUniversity = _universityRepository.GetByName(name);
@@ -142,14 +142,14 @@ public class UniversityController : ControllerBase
                 Data = null
             });
         }
-        return Ok(new ResponseVM<UniversityVM>
+        return Ok(new ResponseVM<IEnumerable<UniversityVM>>
         {
             Code = StatusCodes.Status200OK,
             Status = HttpStatusCode.OK.ToString(),
             Message = "Create success",
             Data = nameUniversity,
         });
-    }
+    }*/
 
     [HttpPost]
     public IActionResult Create(UniversityVM universityVM)

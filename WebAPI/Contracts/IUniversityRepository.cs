@@ -5,7 +5,7 @@ namespace WebAPI.Contracts;
 
 public interface IUniversityRepository : IGenericRepository<University>
 {
-    UniversityVM? GetByName(string name);
-    UniversityVM CreateWithValidate(University university);
+    /*IEnumerable<UniversityVM>? GetByName(string name);*/
+    University CreateWithValidate(University university);
 
 }

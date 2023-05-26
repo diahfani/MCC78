@@ -95,7 +95,7 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
         return employeeEducations;
     }
 
-    public EmployeeVM GetByEmail(string email)
+     public IEnumerable<Employee> GetByEmail(string email)
     {
         return _context.Set<Employee>().Where(e => e.Email.Contains(email));
     }

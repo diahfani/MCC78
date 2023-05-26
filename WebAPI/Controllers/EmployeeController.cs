@@ -43,7 +43,7 @@ public class EmployeeController : ControllerBase
                 Data = null
             });
         }
-        return Ok(new ResponseVM<EmployeeVM>
+        return Ok(new ResponseVM<IEnumerable<Employee>>
         {
             Code = StatusCodes.Status200OK,
             Status = HttpStatusCode.OK.ToString(),
