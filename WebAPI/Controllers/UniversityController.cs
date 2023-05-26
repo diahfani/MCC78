@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebAPI.Contracts;
 using WebAPI.Model;
 using WebAPI.ViewModels.Educations;
+using WebAPI.ViewModels.Others;
+using WebAPI.ViewModels.Roles;
 using WebAPI.ViewModels.Universities;
 
 namespace WebAPI.Controllers;
@@ -29,7 +32,13 @@ public class UniversityController : ControllerBase
         var universities = _universityRepository.GetAll();
         if (!universities.Any())
         {
-            return NotFound();
+            return NotFound(new ResponseVM<UniversityEducationVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
 
         var resultMapped = new List<UniversityEducationVM>();
@@ -49,7 +58,13 @@ public class UniversityController : ControllerBase
             resultMapped.Add(result);
             
         }
-        return Ok(resultMapped);
+        return Ok(new ResponseVM<IEnumerable<UniversityEducationVM>>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = resultMapped,
+        });
     }
 
 
@@ -58,7 +73,13 @@ public class UniversityController : ControllerBase
     {
         var universities = _universityRepository.GetAll();
         if (!universities.Any()) {
-            return NotFound();
+            return NotFound(new ResponseVM<UniversityVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
 
         // cara manual
@@ -72,7 +93,13 @@ public class UniversityController : ControllerBase
         //cara cepet pake LINQ
         var resultConverted = universities.Select(_mapper.Map).ToList();
 
-        return Ok(resultConverted);
+        return Ok(new ResponseVM<List<UniversityVM>>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Success get data",
+            Data = resultConverted,
+        });
     }
 
     [HttpGet("{guid:guid}")]
@@ -81,12 +108,24 @@ public class UniversityController : ControllerBase
         var university = _universityRepository.GetByGuid(guid);
         if (university is null)
         {
-            return NotFound();
+            return NotFound(new ResponseVM<UniversityVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
 
         var data = _mapper.Map(university);
 
-        return Ok(data);
+        return Ok(new ResponseVM<UniversityVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = data,
+        });
     }
 
     [HttpGet("byName/{name}")]
@@ -95,9 +134,21 @@ public class UniversityController : ControllerBase
         var nameUniversity = _universityRepository.GetByName(name);
         if (nameUniversity is null)
         {
-            return NotFound();
+            return NotFound(new ResponseVM<UniversityVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
-        return Ok(nameUniversity);
+        return Ok(new ResponseVM<UniversityVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Create success",
+            Data = nameUniversity,
+        });
     }
 
     [HttpPost]
@@ -108,10 +159,22 @@ public class UniversityController : ControllerBase
         var result = _universityRepository.Create(universityConverted);
         if (result is null)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<UniversityVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Create failed",
+                Data = null
+            });
         }
 
-        return Ok(result);
+        return Ok(new ResponseVM<UniversityVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Create success",
+            Data = null,
+        });
     }
 
     [HttpPut]
@@ -121,10 +184,22 @@ public class UniversityController : ControllerBase
         var isUpdated = _universityRepository.Update(universityConvert);
         if (!isUpdated)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<UniversityVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Update failed",
+                Data = null
+            });
         }
 
-        return Ok();
+        return Ok(new ResponseVM<UniversityVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Update success",
+            Data = null,
+        });
     }
 
     [HttpDelete("{guid}")]
@@ -133,9 +208,21 @@ public class UniversityController : ControllerBase
         var isDeleted = _universityRepository.Delete(guid);
         if (!isDeleted)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<UniversityVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Delete failed",
+                Data = null
+            });
         }
 
-        return Ok();
+        return Ok(new ResponseVM<UniversityVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Delete success",
+            Data = null,
+        });
     }
 }

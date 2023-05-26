@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.ViewModels.Others;
 using WebAPI.ViewModels.AccountRoles;
+using WebAPI.ViewModels.Accounts;
 using WebAPI.ViewModels.Educations;
 using WebAPI.ViewModels.Universities;
 
@@ -25,11 +28,23 @@ public class AccountRoleController : ControllerBase
         var accountRole = _accountRoleRepository.GetAll();
         if (!accountRole.Any())
         {
-            return NotFound();
+            return NotFound(new ResponseVM<AccountRoleVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
         var resultConverted = accountRole.Select(_mapper.Map).ToList();
 
-        return Ok(resultConverted);
+        return Ok(new ResponseVM<List<AccountRoleVM>>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Data successfully obtained!",
+            Data = resultConverted,
+        });
     }
 
     [HttpGet("{guid}")]
@@ -38,11 +53,23 @@ public class AccountRoleController : ControllerBase
         var accountRole = _accountRoleRepository.GetByGuid(guid);
         if (accountRole is null)
         {
-            return NotFound();
+            return NotFound(new ResponseVM<AccountRoleVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
         var data = _mapper.Map(accountRole);
 
-        return Ok(data);
+        return Ok(new ResponseVM<AccountRoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Data successfully obtained!",
+            Data = data,
+        });
     }
 
     [HttpPost]
@@ -52,10 +79,22 @@ public class AccountRoleController : ControllerBase
         var result = _accountRoleRepository.Create(accountRoleConverted);
         if (result is null)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<AccountRoleVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Create failed",
+                Data = null
+            });
         }
 
-        return Ok(result);
+        return Ok(new ResponseVM<AccountRoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Create success",
+            Data = null,
+        });
     }
 
     [HttpPut]
@@ -65,10 +104,22 @@ public class AccountRoleController : ControllerBase
         var isUpdated = _accountRoleRepository.Update(accountRoleConverted);
         if (!isUpdated)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<AccountRoleVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Update failed",
+                Data = null
+            });
         }
 
-        return Ok();
+        return Ok(new ResponseVM<AccountRoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Update success",
+            Data = null,
+        });
     }
 
     [HttpDelete("{guid}")]
@@ -77,10 +128,22 @@ public class AccountRoleController : ControllerBase
         var isDeleted = _accountRoleRepository.Delete(guid);
         if (!isDeleted)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<AccountRoleVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Delete failed",
+                Data = null
+            });
         }
 
-        return Ok();
+        return Ok(new ResponseVM<AccountRoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Delete success",
+            Data = null,
+        });
     }
 
 }

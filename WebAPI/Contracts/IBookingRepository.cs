@@ -5,5 +5,7 @@ namespace WebAPI.Contracts;
 
 public interface IBookingRepository : IGenericRepository<Booking>
 {
-    IEnumerable<BookingRoomVM> GetBookingLength();
+    IEnumerable<BookingDurationVM> GetBookingDuration();
+    BookingDetailVM GetBookingDetailByGuid(Guid guid);
+    IEnumerable<BookingDetailVM> GetAllBookingDetail();
 }

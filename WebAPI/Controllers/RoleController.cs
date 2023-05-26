@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebAPI.Contracts;
 using WebAPI.Model;
+using WebAPI.ViewModels.Employees;
+using WebAPI.ViewModels.Others;
 using WebAPI.ViewModels.Roles;
 using WebAPI.ViewModels.Universities;
 
@@ -25,11 +28,23 @@ public class RoleController : ControllerBase
         var role = _roleRepository.GetAll();
         if (!role.Any())
         {
-            return NotFound();
+            return NotFound(new ResponseVM<RoleVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
         var resultConverted = role.Select(_mapper.Map).ToList();
 
-        return Ok(resultConverted);
+        return Ok(new ResponseVM<List<RoleVM>>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = resultConverted,
+        });
 
 
     }
@@ -40,11 +55,23 @@ public class RoleController : ControllerBase
         var role = _roleRepository.GetByGuid(guid);
         if (role is null)
         {
-            return NotFound();
+            return NotFound(new ResponseVM<RoleVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
         var data = _mapper.Map(role);
 
-        return Ok(data);
+        return Ok(new ResponseVM<RoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = data,
+        });
     }
 
     [HttpPost]
@@ -54,10 +81,22 @@ public class RoleController : ControllerBase
         var result = _roleRepository.Create(roleConverted);
         if (result is null)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<RoleVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Create failed",
+                Data = null
+            });
         }
 
-        return Ok(result);
+        return Ok(new ResponseVM<RoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Create success",
+            Data = null,
+        });
     }
 
     [HttpPut]
@@ -67,10 +106,22 @@ public class RoleController : ControllerBase
         var isUpdated = _roleRepository.Update(roleConverted);
         if (!isUpdated)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<RoleVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Update failed",
+                Data = null
+            });
         }
 
-        return Ok();
+        return Ok(new ResponseVM<RoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Update success",
+            Data = null,
+        });
     }
 
     [HttpDelete("{guid}")]
@@ -79,9 +130,21 @@ public class RoleController : ControllerBase
         var isDeleted = _roleRepository.Delete(guid);
         if (!isDeleted)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<RoleVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Delete failed",
+                Data = null
+            });
         }
 
-        return Ok();
+        return Ok(new ResponseVM<RoleVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Delete success",
+            Data = null,
+        });
     }
 }

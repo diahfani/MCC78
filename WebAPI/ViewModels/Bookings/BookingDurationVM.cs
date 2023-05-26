@@ -1,7 +1,7 @@
 ﻿namespace WebAPI.ViewModels.Bookings;
 
-public class BookingRoomVM
+public class BookingDurationVM
 {
     public string RoomName { get; set; }
-    public int BookingLength { get; set; }
+    public int DurationOfBooking { get; set; }
 }

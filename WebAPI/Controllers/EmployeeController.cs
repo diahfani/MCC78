@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebAPI.Contracts;
 using WebAPI.Model;
 using WebAPI.Repositories;
 using WebAPI.ViewModels.Accounts;
 using WebAPI.ViewModels.Booking;
+using WebAPI.ViewModels.Educations;
 using WebAPI.ViewModels.Employees;
+using WebAPI.ViewModels.Others;
 using WebAPI.ViewModels.Universities;
 
 namespace WebAPI.Controllers;
@@ -32,22 +35,46 @@ public class EmployeeController : ControllerBase
         var emailEmployee = _employeeRepository.GetByEmail(email);
         if (emailEmployee is null)
         {
-            return NotFound();
+            return NotFound(new ResponseVM<EmployeeVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
-        return Ok(emailEmployee);
+        return Ok(new ResponseVM<EmployeeVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = emailEmployee,
+        });
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetEmployee()
     {
         var employee = _employeeRepository.GetAll();
         if (!employee.Any())
         {
-            return NotFound();
+            return NotFound(new ResponseVM<EmployeeVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
         }
         var resultConverted = employee.Select(_mapper.Map).ToList();
 
-        return Ok(resultConverted);
+        return Ok(new ResponseVM<List<EmployeeVM>>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = resultConverted,
+        });
     }
 
     [HttpGet("{guid}")]
@@ -56,11 +83,71 @@ public class EmployeeController : ControllerBase
         var employee = _employeeRepository.GetByGuid(guid);
         if (employee is null)
         {
-            return NotFound();
+            return NotFound(new ResponseVM<EmployeeVM> 
+            { 
+                Code = StatusCodes.Status404NotFound, 
+                Status = HttpStatusCode.NotFound.ToString(), 
+                Message = "Data not found", 
+                Data = null 
+            });
         }
         var data = _mapper.Map(employee);
 
-        return Ok(data);
+        return Ok(new ResponseVM<EmployeeVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = data,
+        });
+    }
+
+    [HttpGet("GetAllMasterEmployee")]
+    public IActionResult GetAll()
+    {
+        var masterEmployees = _employeeRepository.GetAllMasterEmployee();
+        if (!masterEmployees.Any())
+        {
+            return NotFound(new ResponseVM<EmployeeVM> 
+            { 
+                Code = StatusCodes.Status404NotFound, 
+                Status = HttpStatusCode.NotFound.ToString(), 
+                Message = "Data not found", 
+                Data = null 
+            });
+        }
+
+        return Ok(new ResponseVM<IEnumerable<MasterEmployeeVM>>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = masterEmployees,
+        });
+    }
+
+    [HttpGet("GetMasterEmployeeByGuid")]
+    public IActionResult GetMasterEmployeeByGuid(Guid guid)
+    {
+        var masterEmployees = _employeeRepository.GetMasterEmployeeByGuid(guid);
+        if (masterEmployees is null)
+        {
+            return NotFound(new ResponseVM<MasterEmployeeVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data not found",
+                Data = null
+            });
+        }
+
+        return Ok(new ResponseVM<MasterEmployeeVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "success get data",
+            Data = masterEmployees,
+        });
     }
 
     [HttpPost]
@@ -70,10 +157,22 @@ public class EmployeeController : ControllerBase
         var result = _employeeRepository.Create(employeeConverted);
         if (result is null)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<EmployeeVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Create failed",
+                Data = null
+            });
         }
 
-        return Ok(result);
+        return Ok(new ResponseVM<EmployeeVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Create success",
+            Data = null,
+        });
     }
 
     [HttpPut]
@@ -83,10 +182,23 @@ public class EmployeeController : ControllerBase
         var isUpdated = _employeeRepository.Update(employeeConverted);
         if (!isUpdated)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<EmployeeVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Update failed",
+                Data = null
+            });
         }
+    
 
-        return Ok();
+        return Ok(new ResponseVM<EmployeeVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Update success",
+            Data = null,
+        });
     }
 
     [HttpDelete("{guid}")]
@@ -95,10 +207,23 @@ public class EmployeeController : ControllerBase
         var isDeleted = _employeeRepository.Delete(guid);
         if (!isDeleted)
         {
-            return BadRequest();
+            return BadRequest(new ResponseVM<EmployeeVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Delete failed",
+                Data = null
+            });
         }
+    
 
-        return Ok();
+        return Ok(new ResponseVM<EmployeeVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Delete success",
+            Data = null,
+        });
     }
 
 
