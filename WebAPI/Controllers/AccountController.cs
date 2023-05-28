@@ -11,6 +11,7 @@ using WebAPI.ViewModels.Employees;
 using WebAPI.ViewModels.Login;
 using WebAPI.ViewModels.Universities;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WebAPI.Controllers;
 
@@ -20,11 +21,14 @@ public class AccountController : GenericController<Account, AccountVM>
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IEmployeeRepository _employeeRepository;
+    private readonly IEmailService _emailService;
     /*private readonly IMapper<Account, AccountVM> _mapper;*/
-    public AccountController(IEmployeeRepository employeeRepository, IAccountRepository accountRepository, IMapper<Account, AccountVM> mapper) : base(accountRepository, mapper)
+    public AccountController(IEmployeeRepository employeeRepository, IAccountRepository accountRepository, IMapper<Account, AccountVM> mapper,
+        IEmailService emailService) : base(accountRepository, mapper)
     {
         _accountRepository = accountRepository;
         _employeeRepository = employeeRepository;
+        _emailService = emailService;
         /*_mapper = mapper;*/
     }
 
@@ -175,12 +179,10 @@ public class AccountController : GenericController<Account, AccountVM>
                     OTP = isUpdated
                 };
 
-                MailService mailService = new MailService();
-                mailService.WithSubject("Kode OTP")
-                           .WithBody("OTP anda adalah: " + isUpdated.ToString() + ".\n" +
-                                     "Mohon kode OTP anda tidak diberikan kepada pihak lain" + ".\n" + "Terima kasih.")
-                           .WithEmail(email)
-                           .Send();
+                _emailService.SetEmail(email)
+                    .SetSubject("Forgot Password")
+                    .SetHtmlMessage($"Your OTP is {isUpdated}")
+                    .SendEmailAsync();
 
                 return Ok(new ResponseVM<AccountResetPasswordVM>
                 {

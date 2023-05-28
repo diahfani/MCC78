@@ -14,19 +14,12 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class EmployeeController : ControllerBase
+public class EmployeeController : GenericController<Employee, EmployeeVM>
 {
     private readonly IEmployeeRepository _employeeRepository;
-    private readonly IAccountRepository _accountRepository;
-    private readonly IMapper<Employee, EmployeeVM> _mapper;
-    private readonly IMapper<Account, AccountVM> _accountMapper;
-    public EmployeeController(IEmployeeRepository employeeRepository, IMapper<Employee, EmployeeVM> mapper,
-        IAccountRepository accountRepository, IMapper<Account, AccountVM> accountMapper)
+    public EmployeeController(IEmployeeRepository employeeRepository, IMapper<Employee, EmployeeVM> mapper) : base(employeeRepository, mapper)
     {
         _employeeRepository = employeeRepository;
-        _mapper = mapper;
-        _accountMapper = accountMapper;
-        _accountRepository = accountRepository;
     }
 
     [HttpGet("byEmail/{email}")]
@@ -52,8 +45,8 @@ public class EmployeeController : ControllerBase
         });
     }
 
-    [HttpGet]
-    public IActionResult GetEmployee()
+/*    [HttpGet]
+    public IActionResult GetAll()
     {
         var employee = _employeeRepository.GetAll();
         if (!employee.Any())
@@ -100,10 +93,10 @@ public class EmployeeController : ControllerBase
             Message = "success get data",
             Data = data,
         });
-    }
+    }*/
 
     [HttpGet("GetAllMasterEmployee")]
-    public IActionResult GetAll()
+    public IActionResult GetAllEmployee()
     {
         var masterEmployees = _employeeRepository.GetAllMasterEmployee();
         if (!masterEmployees.Any())
@@ -150,7 +143,7 @@ public class EmployeeController : ControllerBase
         });
     }
 
-    [HttpPost]
+/*    [HttpPost]
     public IActionResult Create(EmployeeVM employeeVM)
     {
         var employeeConverted = _mapper.Map(employeeVM);
@@ -224,7 +217,7 @@ public class EmployeeController : ControllerBase
             Message = "Delete success",
             Data = null,
         });
-    }
+    }*/
 
 
 }

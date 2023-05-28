@@ -13,17 +13,17 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BookingController : ControllerBase 
+public class BookingController : GenericController<Booking, BookingVM> 
 {
     private readonly IBookingRepository _bookingRepository;
-    private readonly IMapper<Booking, BookingVM> _mapper;
-    public BookingController(IBookingRepository bookingRepository, IMapper<Booking, BookingVM> mapper)
+    /*private readonly IMapper<Booking, BookingVM> _mapper;*/
+    public BookingController(IBookingRepository bookingRepository, IMapper<Booking, BookingVM> mapper) : base(bookingRepository, mapper)
     {
         _bookingRepository = bookingRepository;
-        _mapper = mapper;
+        /*_mapper = mapper;*/
     }
 
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult GetAll()
     {
         var booking = _bookingRepository.GetAll();
@@ -71,7 +71,7 @@ public class BookingController : ControllerBase
             Message = "Success get data",
             Data = data,
         });
-    }
+    }*/
 
     [HttpGet("bookingduration")]
     public IActionResult GetDuration()
@@ -161,7 +161,7 @@ public class BookingController : ControllerBase
 
 
 
-    [HttpPost]
+    /*[HttpPost]
     public IActionResult Create(BookingVM bookingVM)
     {
         var bookingConverted = _mapper.Map(bookingVM);
@@ -234,5 +234,5 @@ public class BookingController : ControllerBase
             Data = null,
         });
     }
-
+*/
 }

@@ -12,21 +12,15 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class RoomController : ControllerBase
+public class RoomController : GenericController<Room, RoomVM>
 {
     private readonly IRoomRepository _roomRepository;
-    private readonly IBookingRepository _bookingRepository;
-    private readonly IEmployeeRepository _employeeRepository;
-    private readonly IMapper<Room, RoomVM> _mapper;
-    public RoomController(IRoomRepository roomRepository, IBookingRepository bookingRepository, IEmployeeRepository employee, IMapper<Room, RoomVM> mapper)
+    public RoomController(IRoomRepository roomRepository, IMapper<Room, RoomVM> mapper) : base(roomRepository, mapper)
     {
         _roomRepository = roomRepository;
-        _bookingRepository = bookingRepository;
-        _employeeRepository = employee;
-        _mapper = mapper;
     }
 
-    [HttpGet]
+/*    [HttpGet]
     public IActionResult GetAll()
     {
         var room = _roomRepository.GetAll();
@@ -74,7 +68,7 @@ public class RoomController : ControllerBase
             Message = "success get data",
             Data = data,
         });
-    }
+    }*/
 
     [HttpGet("CurrentlyUsedRooms")]
     public IActionResult GetCurrentlyUsedRooms()
@@ -161,7 +155,7 @@ public class RoomController : ControllerBase
         }
     }
 
-    [HttpPost]
+/*    [HttpPost]
     public IActionResult Create(RoomVM roomVM)
     {
         var roomConvert = _mapper.Map(roomVM);
@@ -234,7 +228,7 @@ public class RoomController : ControllerBase
             Data = null,
         });
     }
-
+*/
 
 
 }

@@ -11,17 +11,16 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UniversityController : ControllerBase
+public class UniversityController : GenericController<University, UniversityVM>
 {
     private readonly IUniversityRepository _universityRepository;
     private readonly IEducationRepository _educationRepository;
-    private readonly IMapper<University, UniversityVM> _mapper;
     private readonly IMapper<Education, EducationVM> _educationMapper;
-    public UniversityController(IUniversityRepository universityRepository, IEducationRepository educationRepository, IMapper<University, UniversityVM> mapper, IMapper<Education, EducationVM> educationMapper)
+    public UniversityController(IUniversityRepository universityRepository, IEducationRepository educationRepository, 
+        IMapper<University, UniversityVM> mapper, IMapper<Education, EducationVM> educationMapper) : base(universityRepository, mapper)
     {
         _universityRepository = universityRepository;
         _educationRepository = educationRepository;
-        _mapper = mapper;
         _educationMapper = educationMapper;
     }
 
@@ -68,7 +67,7 @@ public class UniversityController : ControllerBase
     }
 
 
-    [HttpGet]
+/*    [HttpGet]
     public IActionResult GetAll()
     {
         var universities = _universityRepository.GetAll();
@@ -83,12 +82,12 @@ public class UniversityController : ControllerBase
         }
 
         // cara manual
-        /*var universitiesToVM = new List<UniversityVM>();
+        *//*var universitiesToVM = new List<UniversityVM>();
         foreach(var university in universities)
         {
             var result = UniversityVM.ToVM(university);
             universitiesToVM.Add(result);
-        }*/
+        }*//*
 
         //cara cepet pake LINQ
         var resultConverted = universities.Select(_mapper.Map).ToList();
@@ -126,7 +125,7 @@ public class UniversityController : ControllerBase
             Message = "success get data",
             Data = data,
         });
-    }
+    }*/
 
     /*[HttpGet("byName/{name}")]
     public IActionResult GetByName(string name)
@@ -151,10 +150,10 @@ public class UniversityController : ControllerBase
         });
     }*/
 
-    [HttpPost]
+/*    [HttpPost]
     public IActionResult Create(UniversityVM universityVM)
     {
-        /*var universityConverted = UniversityVM.ToModel(universityVM);*/
+        *//*var universityConverted = UniversityVM.ToModel(universityVM);*//*
         var universityConverted = _mapper.Map(universityVM);
         var result = _universityRepository.Create(universityConverted);
         if (result is null)
@@ -224,5 +223,5 @@ public class UniversityController : ControllerBase
             Message = "Delete success",
             Data = null,
         });
-    }
+    }*/
 }

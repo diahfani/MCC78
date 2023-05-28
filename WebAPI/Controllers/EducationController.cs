@@ -12,17 +12,17 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class EducationController : ControllerBase
+public class EducationController : GenericController<Education, EducationVM>
 {
-    private readonly IEducationRepository _educationRepository;
-    private readonly IMapper<Education, EducationVM> _educationMapper;
-    public EducationController(IEducationRepository educationRepository, IMapper<Education, EducationVM> educationMapper)
+    /*private readonly IEducationRepository _educationRepository;
+    private readonly IMapper<Education, EducationVM> _educationMapper;*/
+    public EducationController(IEducationRepository educationRepository, IMapper<Education, EducationVM> educationMapper) : base(educationRepository, educationMapper)
     {
-        _educationRepository = educationRepository;
-        _educationMapper = educationMapper;
+        /*_educationRepository = educationRepository;
+        _educationMapper = educationMapper;*/
     }
 
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult GetAll()
     {
         var education = _educationRepository.GetAll();
@@ -144,6 +144,6 @@ public class EducationController : ControllerBase
             Message = "Delete success",
             Data = null,
         });
-    }
+    }*/
 
 }

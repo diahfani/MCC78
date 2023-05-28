@@ -12,17 +12,17 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AccountRoleController : ControllerBase
+public class AccountRoleController : GenericController<AccountRole, AccountRoleVM>
 {
-    private readonly IAccountRoleRepository _accountRoleRepository;
-    private readonly IMapper<AccountRole, AccountRoleVM> _mapper;
-    public AccountRoleController(IAccountRoleRepository accountRoleRepository, IMapper<AccountRole, AccountRoleVM> mapper)
+    /*private readonly IAccountRoleRepository _accountRoleRepository;*/
+    /*private readonly IMapper<AccountRole, AccountRoleVM> _mapper;*/
+    public AccountRoleController(IAccountRoleRepository accountRoleRepository, IMapper<AccountRole, AccountRoleVM> mapper) : base(accountRoleRepository, mapper)
     {
-        _accountRoleRepository = accountRoleRepository;
-        _mapper = mapper;
+        /*_accountRoleRepository = accountRoleRepository;*/
+        /*_mapper = mapper;*/
     }
 
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult GetAll()
     {
         var accountRole = _accountRoleRepository.GetAll();
@@ -144,6 +144,6 @@ public class AccountRoleController : ControllerBase
             Message = "Delete success",
             Data = null,
         });
-    }
+    }*/
 
 }
