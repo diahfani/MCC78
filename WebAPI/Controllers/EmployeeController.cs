@@ -41,7 +41,7 @@ public class EmployeeController : GenericController<Employee, EmployeeVM>
             Code = StatusCodes.Status200OK,
             Status = HttpStatusCode.OK.ToString(),
             Message = "success get data",
-            Data = emailEmployee,
+            Data = null,
         });
     }
 

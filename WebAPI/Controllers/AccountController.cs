@@ -12,6 +12,7 @@ using WebAPI.ViewModels.Login;
 using WebAPI.ViewModels.Universities;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers;
 
@@ -22,13 +23,15 @@ public class AccountController : GenericController<Account, AccountVM>
     private readonly IAccountRepository _accountRepository;
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IEmailService _emailService;
+    private readonly ITokenService _tokenService;
     /*private readonly IMapper<Account, AccountVM> _mapper;*/
     public AccountController(IEmployeeRepository employeeRepository, IAccountRepository accountRepository, IMapper<Account, AccountVM> mapper,
-        IEmailService emailService) : base(accountRepository, mapper)
+        IEmailService emailService, ITokenService tokenService) : base(accountRepository, mapper)
     {
         _accountRepository = accountRepository;
         _employeeRepository = employeeRepository;
         _emailService = emailService;
+        _tokenService = tokenService;
         /*_mapper = mapper;*/
     }
 
@@ -60,8 +63,30 @@ public class AccountController : GenericController<Account, AccountVM>
     [HttpPost("login")]
     public IActionResult Login(LoginVM loginVM)
     {
-        var query = _accountRepository.Login(loginVM);
+        var employees = _employeeRepository.GetByEmail(loginVM.Email);
+        if (employees == null)
+        {
+            return BadRequest(new ResponseVM<LoginVM>
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Status = HttpStatusCode.BadRequest.ToString(),
+                Message = "Employee not found"
+            });
+        }
 
+        var employee = new EmployeeVM
+        {
+            Nik = employees.Nik,
+            Email = employees.Email,
+            FirstName = employees.FirstName,
+            LastName = employees.LastName,
+            BirthDate = employees.BirthDate,
+            Gender = employees.Gender.ToString(),
+            HiringDate = employees.HiringDate,
+            PhoneNumber = employees.PhoneNumber,
+        };
+
+        var query = _accountRepository.Login(loginVM);
         if (query == null)
         {
             return BadRequest(new ResponseVM<LoginVM>
@@ -83,14 +108,31 @@ public class AccountController : GenericController<Account, AccountVM>
                 Data = null
             });
         }
-        return Ok(new ResponseVM<LoginVM>
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, employee.Nik),
+            new(ClaimTypes.Name, $"{employee.FirstName} {employee.LastName}"),
+            new(ClaimTypes.Email, employee.Email)
+        };
+
+        var roles = _accountRepository.GetRoles(employee.Guid);
+
+        foreach(var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+        var token = _tokenService.GenerateToken(claims);
+
+        return Ok(new ResponseVM<string>
         {
             Code = StatusCodes.Status200OK,
             Status = HttpStatusCode.OK.ToString(),
             Message = "Success login!",
-            Data = null
+            Data = token
         });
-       
+
     }
 
     [HttpPost("Register")]
@@ -144,7 +186,7 @@ public class AccountController : GenericController<Account, AccountVM>
 
     }
 
-    [HttpPost("ForgotPassword" + "{email}")]
+    [HttpPost("ForgotPassword/{email}")]
     public IActionResult UpdateResetPass(String email)
     {
 
@@ -173,11 +215,11 @@ public class AccountController : GenericController<Account, AccountVM>
                     Data = null
                 });
             default:
-                var hasil = new AccountResetPasswordVM
+                /*var hasil = new AccountResetPasswordVM
                 {
                     Email = email,
                     OTP = isUpdated
-                };
+                };*/
 
                 _emailService.SetEmail(email)
                     .SetSubject("Forgot Password")
@@ -188,8 +230,7 @@ public class AccountController : GenericController<Account, AccountVM>
                 {
                     Code = StatusCodes.Status200OK,
                     Status = HttpStatusCode.OK.ToString(),
-                    Message = "Success get OTP",
-                    Data = hasil,
+                    Message = "OTP successfully has been sent to email",
                 });
 
         }
@@ -250,7 +291,7 @@ public class AccountController : GenericController<Account, AccountVM>
                 { 
                     Code = StatusCodes.Status400BadRequest, 
                     Status = HttpStatusCode.BadRequest.ToString(), 
-                    Message = "Wrong Password No Same", 
+                    Message = "Password didn't match", 
                     Data = null 
                 });
             default:
@@ -263,9 +304,31 @@ public class AccountController : GenericController<Account, AccountVM>
                 });
         }
 
+
+
     }
 
-
+    [HttpGet("token")]
+    public IActionResult GetByToken(string token)
+    {
+        var data = _tokenService.ExtractClaimsFromJwt(token);
+        if (data == null)
+        {
+            return NotFound(new ResponseVM<ClaimVM>
+            {
+                Code = StatusCodes.Status404NotFound,
+                Status = HttpStatusCode.NotFound.ToString(),
+                Message = "Data Not Found"
+            });
+        }
+        return Ok(new ResponseVM<ClaimVM>
+        {
+            Code = StatusCodes.Status200OK,
+            Status = HttpStatusCode.OK.ToString(),
+            Message = "Data Success",
+            Data = data
+        });
+    }
     /*[HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {

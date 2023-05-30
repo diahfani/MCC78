@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using WebAPI.Context;
 using WebAPI.Contracts;
 using WebAPI.Model;
@@ -12,6 +13,10 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
     {
     }
 
+    public bool CheckEmailAndPhoneAndNIK(string value)
+    {
+        return _context.Employees.Any(e => e.Email == value || e.nik == value || e.PhoneNumber == value);
+    }
     public int CreateWithValidate(Employee employee)
     {
         try
@@ -95,9 +100,22 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
         return employeeEducations;
     }
 
-     public IEnumerable<Employee> GetByEmail(string email)
+    public EmployeeVM GetByEmail(string email)
     {
-        return _context.Set<Employee>().Where(e => e.Email.Contains(email));
+        var employee = _context.Employees.FirstOrDefault(e => e.Email == email);
+        var data = new EmployeeVM
+        {
+            Guid = employee.Guid,
+            Nik = employee.nik,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
+            BirthDate = employee.BirthDate,
+            Gender = employee.Gender.ToString(),
+            HiringDate = employee.HiringDate,
+            Email = employee.Email,
+            PhoneNumber = employee.PhoneNumber
+        };
+        return data;
     }
 
     public MasterEmployeeVM? GetMasterEmployeeByGuid(Guid guid)

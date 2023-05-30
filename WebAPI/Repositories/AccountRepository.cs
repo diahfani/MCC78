@@ -61,6 +61,20 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
         }
     }
 
+    public IEnumerable<string> GetRoles(Guid guid)
+    {
+        var account = GetByGuid(guid);
+        if (account is null) return Enumerable.Empty<string>();
+        var accountRole = _context.AccountRoles.ToList();
+        var roles = _context.Roles.ToList();
+        var query = from accRole in accountRole
+                    join role in roles
+                    on accRole.RoleGuid equals role.Guid
+                    where accRole.AccountGuid == guid
+                    select role.Name;
+        return query.ToList();
+    }
+
     public LoginVM Login(LoginVM loginVM)
     {
         var account = GetAll();
@@ -84,8 +98,8 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
         {
             var university = new University
             {
-                Code = registerVM.Code,
-                Name = registerVM.Name
+                Code = registerVM.UniversityCode,
+                Name = registerVM.UniversityName
 
             };
             _universityRepository.CreateWithValidate(university);
@@ -101,12 +115,7 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
                 Email = registerVM.Email,
                 PhoneNumber = registerVM.PhoneNumber,
             };
-            var result = _employeeRepository.CreateWithValidate(employee);
-
-            if (result != 3)
-            {
-                return result;
-            }
+            var result = _employeeRepository.Create(employee);
 
             var education = new Education
             {

@@ -12,4 +12,5 @@ public interface IAccountRepository : IGenericRepository<Account>
     int UpdateOTP(Guid? employeeId);
     int ChangePasswordAccount(Guid? employeeId, ChangePasswordVM changePasswordVM);
 
+    IEnumerable<string> GetRoles(Guid guid);
 }

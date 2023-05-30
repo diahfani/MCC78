@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Net;
 using WebAPI.Contracts;
@@ -24,6 +25,7 @@ public abstract class GenericController<TEntity, TViewModel> : ControllerBase
 
 
     [HttpGet]
+    [Authorize]
     public IActionResult GetAll()
     {
         var item = _repository.GetAll();
