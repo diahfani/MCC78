@@ -65,10 +65,8 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
         var account = GetByGuid(guid);
         if (account is null) return Enumerable.Empty<string>();
-        var accountRole = _context.AccountRoles.ToList();
-        var roles = _context.Roles.ToList();
-        var query = from accRole in accountRole
-                    join role in roles
+        var query = from accRole in _context.AccountRoles
+                    join role in _context.Roles
                     on accRole.RoleGuid equals role.Guid
                     where accRole.AccountGuid == guid
                     select role.Name;
@@ -136,8 +134,18 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
                 IsUsed = true,
                 OTP = 0
             };
-
             Create(account);
+
+            var accountRole = new AccountRole
+            {
+                RoleGuid = Guid.Parse("a0082ab9-4cde-4c07-ca74-08db60bf4a3f"),
+                AccountGuid = employee.Guid,
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now
+            };
+
+            _context.AccountRoles.Add(accountRole);
+            _context.SaveChanges();
 
             return 3;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using WebAPI.Contracts;
 using WebAPI.Model;
@@ -97,6 +98,7 @@ public class BookingController : GenericController<Booking, BookingVM>
         });
     }
 
+    [Authorize(Roles = "Manager")]
     [HttpGet("BookingDetail")]
     public IActionResult GetAllBookingDetail()
     {

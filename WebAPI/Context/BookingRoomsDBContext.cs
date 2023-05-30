@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Model;
+using WebAPI.Utility;
 
 namespace WebAPI.Context
 {
@@ -18,6 +19,25 @@ namespace WebAPI.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Role>().HasData(new Role
+            {
+                Guid = Guid.Parse("a0082ab9-4cde-4c07-ca74-08db60bf4a3f"),
+                Name = nameof(RoleLevel.User),
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now
+            }, new Role {
+                Guid = Guid.Parse("988f9a38-a740-4281-ca75-08db60bf4a3f"),
+                Name = nameof(RoleLevel.Manager),
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now
+            }, new Role
+            {
+                Guid = Guid.Parse("f275ec7c-1322-4adc-ca76-08db60bf4a3f"),
+                Name = nameof(RoleLevel.Admin),
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now
+            });
 
             builder.Entity<Employee>().HasIndex(e =>
             new

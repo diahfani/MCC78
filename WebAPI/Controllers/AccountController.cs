@@ -13,11 +13,14 @@ using WebAPI.ViewModels.Universities;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableCors()]
 public class AccountController : GenericController<Account, AccountVM>
 {
     private readonly IAccountRepository _accountRepository;
@@ -61,8 +64,10 @@ public class AccountController : GenericController<Account, AccountVM>
     }
 */
     [HttpPost("login")]
+    [AllowAnonymous]
     public IActionResult Login(LoginVM loginVM)
     {
+        var query = _accountRepository.Login(loginVM);
         var employees = _employeeRepository.GetByEmail(loginVM.Email);
         if (employees == null)
         {
@@ -74,7 +79,7 @@ public class AccountController : GenericController<Account, AccountVM>
             });
         }
 
-        var employee = new EmployeeVM
+        /*var employee = new EmployeeVM
         {
             Nik = employees.Nik,
             Email = employees.Email,
@@ -84,9 +89,9 @@ public class AccountController : GenericController<Account, AccountVM>
             Gender = employees.Gender.ToString(),
             HiringDate = employees.HiringDate,
             PhoneNumber = employees.PhoneNumber,
-        };
+        };*/
 
-        var query = _accountRepository.Login(loginVM);
+        
         if (query == null)
         {
             return BadRequest(new ResponseVM<LoginVM>
@@ -111,12 +116,12 @@ public class AccountController : GenericController<Account, AccountVM>
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, employee.Nik),
-            new(ClaimTypes.Name, $"{employee.FirstName} {employee.LastName}"),
-            new(ClaimTypes.Email, employee.Email)
+            new(ClaimTypes.NameIdentifier, employees.Nik),
+            new(ClaimTypes.Name, $"{employees.FirstName} {employees.LastName}"),
+            new(ClaimTypes.Email, employees.Email)
         };
 
-        var roles = _accountRepository.GetRoles(employee.Guid);
+        var roles = _accountRepository.GetRoles(employees.Guid);
 
         foreach(var role in roles)
         {
@@ -136,6 +141,7 @@ public class AccountController : GenericController<Account, AccountVM>
     }
 
     [HttpPost("Register")]
+    [AllowAnonymous]
     public IActionResult Register(RegisterVM registerVM)
     {
 
@@ -239,6 +245,7 @@ public class AccountController : GenericController<Account, AccountVM>
     }
 
     [HttpPost("ChangePassword")]
+    [AllowAnonymous]
     public IActionResult ChangePassword(ChangePasswordVM changePasswordVM)
     {
         // Cek apakah email dan OTP valid

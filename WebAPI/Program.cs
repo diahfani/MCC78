@@ -42,6 +42,31 @@ builder.Services.AddTransient<IEmailService, EmailService>(_ => new EmailService
     fromEmailAddress: builder.Configuration["Email:FromEmailAddress"]
 ));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin();
+        //policy.WithOrigins("http://localhost:3000", "https://localhost:3223");
+        policy.AllowAnyHeader();
+        //policy.WithHeaders("content-type", "authorization");
+        policy.AllowAnyMethod();
+        //policy.WithMethods("GET", "POST", "PUT", "DELETE");
+    });
+
+    /*options.AddPolicy("Tokopedia", policy => {
+        policy.WithOrigins("http://www.tokopedia.co.id");
+        policy.AllowAnyHeader();
+        policy.WithMethods("GET", "POST");
+    });
+    
+    options.AddPolicy("GoPay", policy => {
+        policy.WithOrigins("http://www.tokopedia.co.id");
+        policy.AllowAnyHeader();
+        policy.WithMethods("PUT", "POST");
+    });*/
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options => {
            options.RequireHttpsMetadata = false;
