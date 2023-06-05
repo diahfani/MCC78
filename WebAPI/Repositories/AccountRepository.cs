@@ -44,7 +44,8 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
             return 5;
         }
         // Update password
-        account.Password = changePasswordVM.NewPassword;
+        account.Password = Hashing.HashPassword(changePasswordVM.NewPassword);
+        /*var hashPassword = Hashing.HashPassword(account.Password);*/
         account.IsUsed = true;
         try
         {
