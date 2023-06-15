@@ -42,7 +42,7 @@ namespace WebAPI.Context
             builder.Entity<Employee>().HasIndex(e =>
             new
             {
-                e.nik,
+                e.Nik,
                 e.Email,
                 e.PhoneNumber
             }).IsUnique();

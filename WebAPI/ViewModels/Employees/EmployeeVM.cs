@@ -15,13 +15,11 @@ public class EmployeeVM
     // (?) atau mark question berarti nullable
     public string? LastName { get; set; }
     public DateTime BirthDate { get; set; }
-    public string Gender { get; set; }
+    public GenderLevel Gender { get; set; }
     public DateTime HiringDate { get; set; }
     [EmailAddress]
-    [NIKEmailPhoneValidation(nameof(Email))]
     public string Email { get; set; }
     [Phone]
-    [NIKEmailPhoneValidation(nameof(PhoneNumber))]
     public string PhoneNumber { get; set; }
 
 }

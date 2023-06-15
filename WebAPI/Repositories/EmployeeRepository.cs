@@ -15,7 +15,7 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
 
     public bool CheckEmailAndPhoneAndNIK(string value)
     {
-        return _context.Employees.Any(e => e.Email == value || e.nik == value || e.PhoneNumber == value);
+        return _context.Employees.Any(e => e.Email == value || e.Nik == value || e.PhoneNumber == value);
     }
     public int CreateWithValidate(Employee employee)
     {
@@ -80,7 +80,7 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
                 var employeeEducation = new MasterEmployeeVM
                 {
                     Guid = employee.Guid,
-                    NIK = employee.nik,
+                    NIK = employee.Nik,
                     FullName = employee.FirstName + " " + employee.LastName,
                     BirthDate = employee.BirthDate,
                     Gender = employee.Gender.ToString(),
@@ -106,11 +106,11 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
         var data = new EmployeeVM
         {
             Guid = employee.Guid,
-            Nik = employee.nik,
+            Nik = employee.Nik,
             FirstName = employee.FirstName,
             LastName = employee.LastName,
             BirthDate = employee.BirthDate,
-            Gender = employee.Gender.ToString(),
+            Gender = employee.Gender,
             HiringDate = employee.HiringDate,
             Email = employee.Email,
             PhoneNumber = employee.PhoneNumber
@@ -127,7 +127,7 @@ public class EmployeeRepository : GenericRepository<Employee>, IEmployeeReposito
         var data = new MasterEmployeeVM
         {
             Guid = employee.Guid,
-            NIK = employee.nik,
+            NIK = employee.Nik,
             FullName = employee.FirstName + " " + employee.LastName,
             BirthDate = employee.BirthDate,
             Gender = employee.Gender.ToString(),

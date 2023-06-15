@@ -10,7 +10,7 @@ using WebAPI.ViewModels.Others;
 
 namespace WebAPI.Controllers;
 
-[Authorize(Roles = $"{nameof(RoleLevel.Admin)}, {nameof(RoleLevel.Manager)}")]
+/*[Authorize(Roles = $"{nameof(RoleLevel.Admin)}, {nameof(RoleLevel.Manager)}")]*/
 public abstract class GenericController<TEntity, TViewModel> : ControllerBase
     where TEntity : class
     where TViewModel : class

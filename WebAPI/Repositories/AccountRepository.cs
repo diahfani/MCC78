@@ -105,7 +105,7 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
 
             var employee = new Employee
             {
-                nik = GenerateNIK(),
+                Nik = GenerateNIK(),
                 FirstName = registerVM.FirstName,
                 LastName = registerVM.LastName,
                 BirthDate = registerVM.BirthDate,
@@ -189,12 +189,12 @@ public class AccountRepository : GenericRepository<Account>, IAccountRepository
 
     private string GenerateNIK()
     {
-        var lastNik = _context.Employees.ToList().OrderByDescending(e => int.Parse(e.nik)).FirstOrDefault(); 
+        var lastNik = _context.Employees.ToList().OrderByDescending(e => int.Parse(e.Nik)).FirstOrDefault(); 
 
         if (lastNik != null)
         {
             int lastNikNumber;
-            if (int.TryParse(lastNik.nik, out lastNikNumber))
+            if (int.TryParse(lastNik.Nik, out lastNikNumber))
             {
                 return (lastNikNumber + 1).ToString();
             }

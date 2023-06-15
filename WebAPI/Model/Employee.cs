@@ -7,7 +7,7 @@ namespace WebAPI.Model;
 public class Employee : BaseEntity
 {
     [Column("nik", TypeName = "nchar(6)")]
-    public string nik { get; set; }
+    public string Nik { get; set; }
     [Column("first_name", TypeName = "nchar(100)")]
     public string FirstName { get; set; }
     // (?) atau mark question berarti nullable

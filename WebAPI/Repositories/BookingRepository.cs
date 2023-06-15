@@ -59,7 +59,7 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
         var bookingDetail = new BookingDetailVM
         {
             Guid = booking.Guid,
-            BookedNIK = employee.nik,
+            BookedNIK = employee.Nik,
             Fullname = employee.FirstName + " " + employee.LastName,
             RoomName = room.Name,
             StartDate = booking.StartDate,
@@ -84,7 +84,7 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
                              select new
                              {
                                  b.Guid,
-                                 e.nik,
+                                 e.Nik,
                                  BookedBy = e.FirstName + "" + e.LastName,
                                  r.Name,
                                  b.StartDate,
@@ -102,7 +102,7 @@ public class BookingRepository : GenericRepository<Booking>, IBookingRepository
                 EndDate = dataBookingDetail.EndDate,
                 Status = dataBookingDetail.Status,
                 Remarks = dataBookingDetail.Remarks,
-                BookedNIK = dataBookingDetail.nik,
+                BookedNIK = dataBookingDetail.Nik,
                 Fullname = dataBookingDetail.BookedBy,
                 RoomName = dataBookingDetail.Name
             };

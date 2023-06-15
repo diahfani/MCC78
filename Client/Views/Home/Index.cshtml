@@ -1,0 +1,329 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@*<div class="d-flex">
+    <table class="table table-hover" id="table1" width="100%">
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Detail</th>
+                <th scope="col">Employee</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>*@
+
+<div class="container-lg">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <button type="button" class="btn btn-outline-primary" onclick="employeeValidation()" data-bs-toggle="modal" data-bs-target="#employeeModal" style="width: 10%; margin: 1em;">Add</button>
+                </div>
+                <div class="d-flex">
+                    <table class="table table-hover" id="tableEmployee" width="100%">
+                        <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">NIK</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Birth Date</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Hiring Date</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone Number</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal pokemon detail*@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header header-color">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Pokemon</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col col-img-badge">
+                        <div class="row">
+                            <img src="" alt="" id="imgPoke" />
+                        </div>
+                        <div class="row row-name">
+                            <h2 class="name-pokemon"></h2>
+                        </div>
+                        <div class="row" id="rowBadge">
+                        </div>
+                    </div>
+                    <div class="col col-desc overflow-scroll" style="max-height: 450px">
+                        <div class="row" role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#stats" aria-controls="stats" data-bs-toggle="tab" role="tab">Stats</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#abilities" aria-controls="abilities" data-bs-toggle="tab" role="tab">Abilities</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="stats">
+                                    <h2>Stats</h2>
+                                    <div class="stats">
+                                        <h5>HP</h5>
+                                        <progress id="hp" value="0" max="200" style="--value: 0; --max: 200;"></progress>
+                                        <h5>Attack</h5>
+                                        <progress id="attack" value="25" max="200" style="--value: 25; --max: 200;"></progress>
+                                        <h5>Defense</h5>
+                                        <progress id="defense" value="50" max="200" style="--value: 50; --max: 200;"></progress>
+                                        <h5>Spesial Attack</h5>
+                                        <progress id="specialAttack" value="75" max="200" style="--value: 75; --max: 200;"></progress>
+                                        <h5>Spesial Defense</h5>
+                                        <progress id="specialDefense" value="100" max="200" style="--value: 100; --max: 200;"></progress>
+                                        <h5>Speed</h5>
+                                        <progress id="speed" value="100" max="200" style="--value: 100; --max: 200;"></progress>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="abilities">
+                                    <div class="abilities-0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="desc-card">
+                        <h3 class="desc-title">Description</h3>
+                        <blockquote class="description"></blockquote>
+                        <p class="base-experience">Base Experience :</p>
+                        <p class="height">Height : </p>
+                        <p class="weight">Weight :</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal add*@
+<div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header header-color">
+                <h1 class="modal-title fs-5" id="employeeModalLabel">Add Employee</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submitEmployee()">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12" id="colNIK">
+                            <label for="employeeNIK" class="form-label">NIK</label>
+                            <input required type="text" class="form-control" placeholder="NIK" aria-label="NIK" name="employeeNIK" id="employeeNIK">
+                            <div id="validationNIK">
+                            </div>
+                        </div>
+                        <div class="col-6" id="col">
+                            <label for="employeeFirstName" class="form-label">First Name</label>
+                            <input required type="text" class="form-control" placeholder="First name" aria-label="First name" name="employeeFirstName" id="employeeFirstName">
+                            <div id="validationFirstName">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="employeeLastName" class="form-label">Last Name</label>
+                            <input required type="text" class="form-control" placeholder="Last name" aria-label="Last name" name="employeeLastName" id="employeeLastName">
+                            <div id="validationLastName">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeBirthdate" class="form-label">Birth date</label>
+                            <input type="date" class="form-control" placeholder="Birth date" aria-label="Birth date" name="employeeBirthdate" id="employeeBirthdate">
+                            <div id="validationBirthDate">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeHiringdate" class="form-label">Hiring date</label>
+                            <input type="date" class="form-control" placeholder="Hiring date" aria-label="Hiring date" name="employeeHiringdate" id="employeeHiringdate">
+                            <div id="validationHiringDate">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="" class="form-label gender">Gender</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radioGender" id="perempuanGender" value="0">
+                                <label class="form-check-label" for="perempuanGender">Perempuan</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radioGender" id="lakilakiGender" value="1">
+                                <label class="form-check-label" for="lakilakiGender">Laki-laki</label>
+                            </div>
+                            <div id="validationGender">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeEmail" class="form-label">Email</label>
+                            <input required type="email" class="form-control" placeholder="Email" aria-label="email" name="employeeEmail" id="employeeEmail">
+                            <div id="validationEmail">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeePhoneNumber" class="form-label">Phone Number</label>
+                            <input required type="text" class="form-control" placeholder="Phone Number" aria-label="phoneNumber" name="employeePhoneNumber" id="employeePhoneNumber">
+                            <div id="validationPhoneNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="saveEmployee">Add Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*modal edit*@
+<div class="modal fade" id="employeeEditModal" tabindex="-1" aria-labelledby="employeeEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header header-color">
+                <h1 class="modal-title fs-5" id="employeeModalLabel">Edit Employee</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12" id="colEditNIK">
+                            <label for="employeeEditNIK" class="form-label">NIK</label>
+                            <input required type="text" class="form-control" placeholder="NIK" aria-label="NIK" name="employeeEditNIK" id="employeeEditNIK">
+                            <div id="validationEditNIK">
+                            </div>
+                        </div>
+                        <div class="col-6" id="col">
+                            <label for="employeeEditFirstName" class="form-label">First Name</label>
+                            <input required type="text" class="form-control" placeholder="First name" aria-label="First name" name="employeeEditFirstName" id="employeeEditFirstName">
+                            <div id="validationEditFirstName">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="employeeEditLastName" class="form-label">Last Name</label>
+                            <input required type="text" class="form-control" placeholder="Last name" aria-label="Last name" name="employeeEditLastName" id="employeeEditLastName">
+                            <div id="validationEditLastName">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeEditBirthdate" class="form-label">Birth date</label>
+                            <input type="date" class="form-control" placeholder="Birth date" aria-label="Birth date" name="employeeEditBirthdate" id="employeeEditBirthdate">
+                            <div id="validationEditBirthDate">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeEditHiringdate" class="form-label">Hiring date</label>
+                            <input type="date" class="form-control" placeholder="Hiring date" aria-label="Hiring date" name="employeeEditHiringdate" id="employeeEditHiringdate">
+                            <div id="validationEditHiringDate">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="" class="form-label gender">Gender</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radioEditGender" id="perempuanEditGender" value="0">
+                                <label class="form-check-label" for="perempuanEditGender">Perempuan</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radioEditGender" id="lakilakiEditGender" value="1">
+                                <label class="form-check-label" for="lakilakiEditGender">Laki-laki</label>
+                            </div>
+                            <div id="validationGender">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeEditEmail" class="form-label">Email</label>
+                            <input required type="email" class="form-control" placeholder="Email" aria-label="email" name="employeeEditEmail" id="employeeEditEmail">
+                            <div id="validationEditEmail">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="employeeEditPhoneNumber" class="form-label">Phone Number</label>
+                            <input required type="text" class="form-control" placeholder="Phone Number" aria-label="phoneNumber" name="employeeEditPhoneNumber" id="employeeEditPhoneNumber">
+                            <div id="validationEditPhoneNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="editEmployee">Edit Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@*=========================================================================================================*@
+@*tugas 1*@
+
+@*<div class="container text-center">
+    <div class="row border baris1">
+        <div class="col column1">
+            Column 1 Row 1
+        </div>
+        <div class="col">
+            <div class="row border baris2">
+                Column 2 Row 1
+            </div>
+            <div class="row border baris3">
+                Column 2 Row 2
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="d-flex">
+    <table class="table" id="table1">
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Height</th>
+                <th scope="col">Mass</th>
+                <th scope="col">Hair Color</th>
+                <th scope="col">Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            <div class="spinner-border" role="status" id="loader">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </tbody>
+    </table>
+</div>
+<div class="d-flex">
+    <button type="button" id="button1" class="btn btn-outline-primary">Change color</button>
+    <button type="button" id="button2" onclick="location.reload()" class="btn btn-outline-secondary">Refresh</button>
+    <button type="button" id="button3" class="btn btn-outline-success">Button 3</button>
+</div>*@
+
+
