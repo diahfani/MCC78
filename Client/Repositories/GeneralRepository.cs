@@ -82,11 +82,11 @@ namespace Client.Repositories
 
         }
 
-        public async Task<ResponseMessageVM> Put(TId id, Entity entity)
+        public async Task<ResponseMessageVM> Put(Entity entity)
         {
             ResponseMessageVM? entityVM = null;
             StringContent content = new StringContent(JsonConvert.SerializeObject(entity), Encoding.UTF8, "application/json");
-            using (var response = httpClient.PutAsync(request + id, content).Result)
+            using (var response = httpClient.PutAsync(request, content).Result)
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
                 entityVM = JsonConvert.DeserializeObject<ResponseMessageVM>(apiResponse);

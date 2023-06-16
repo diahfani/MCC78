@@ -15,7 +15,7 @@ namespace Client.Repositories.Interface
         Task<ResponseListVM<T>> Get();
         Task<ResponseVM<T>> Get(X guid);
         Task<ResponseMessageVM> Post(T entity);
-        Task<ResponseMessageVM> Put(X guid, T entity);
+        Task<ResponseMessageVM> Put(T entity);
         Task<ResponseMessageVM> Delete(X guid);
     }
 }

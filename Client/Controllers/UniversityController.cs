@@ -64,27 +64,9 @@ namespace Client.Controllers
 
         [HttpGet]
         /*[ValidateAntiForgeryToken]*/
-        public async Task<IActionResult> Edit(University university)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await repository.Put(university.Guid, university);
-                if (result.StatusCode == "200")
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (result.StatusCode == "409")
-                {
-                    ModelState.AddModelError(string.Empty, result.Message);
-                    return View();
-                }
-            }
-            return View();
-        }
-
-        [HttpPost]
         public async Task<IActionResult> Edit(Guid guid)
         {
+
             var result = await repository.Get(guid);
             var university = new University();
             if (result.Data?.Guid is null)
@@ -94,10 +76,30 @@ namespace Client.Controllers
             else
             {
                 university.Guid = result.Data.Guid;
+                university.Code = result.Data.Code;
                 university.Name = result.Data.Name;
+                university.CreatedDate = result.Data.CreatedDate;
+                university.ModifiedDate = DateTime.Now;
             }
 
             return View(university);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(University university)
+        {
+            var result = await repository.Put(university);
+            if (result.StatusCode == "200")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else if (result.StatusCode == "409")
+            {
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View();
+            }
+            /* }*/
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(Guid guid)
