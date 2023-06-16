@@ -1,5 +1,6 @@
 ﻿using Client.Models;
 using Client.Repositories.Interface;
+using Client.ViewModels;
 /*using Client.Repositories.Data;
 using Client.Repositories.Interface;*/
 using Microsoft.AspNetCore.Authorization;
@@ -27,9 +28,7 @@ namespace Client.Controllers
                 {
                     Guid = e.Guid,
                     Code = e.Code,
-                    Name = e.Name,
-                    CreatedDate = e.CreatedDate,
-                    ModifiedDate = e.ModifiedDate,
+                    Name = e.Name
                 }).ToList();
             }
 
@@ -47,8 +46,8 @@ namespace Client.Controllers
         /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Create(University university)
         {
-            if (ModelState.IsValid)
-            {
+            /*if (ModelState.IsValid)
+            {*/
                 var result = await repository.Post(university);
                 if (result.StatusCode == "200")
                 {
@@ -59,8 +58,8 @@ namespace Client.Controllers
                     ModelState.AddModelError(string.Empty, result.Message);
                     return View();
                 }
-            }
-            return View();
+            /*}*/
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -119,7 +118,7 @@ namespace Client.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Remove(Guid guid)
         {
             var result = await repository.Delete(guid);
@@ -127,7 +126,7 @@ namespace Client.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
