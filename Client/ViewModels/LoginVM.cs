@@ -4,9 +4,9 @@ namespace Client.ViewModels
 {
     public class LoginVM
     {
-        [EmailAddress]
+/*        [EmailAddress]*/
         public string Email { get; set; }
-        [DataType(DataType.Password)]
+/*        [DataType(DataType.Password)]*/
         public string Passsword { get; set; }
     }
 }
