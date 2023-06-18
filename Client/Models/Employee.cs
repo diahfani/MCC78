@@ -1,12 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using WebAPI.Model;
-using WebAPI.Utility;
+﻿using System.ComponentModel.DataAnnotations;
+using Client.Utilities;
+namespace Client.Models;
 
-namespace WebAPI.ViewModels.Employees;
-
-public class EmployeeVM
+public class Employee
 {
     public Guid Guid { get; set; }
     public string Nik { get; set; }
@@ -20,5 +16,6 @@ public class EmployeeVM
     public string Email { get; set; }
     [Phone]
     public string PhoneNumber { get; set; }
+    public DateTime ModifiedDate { get; set; }
 
 }
