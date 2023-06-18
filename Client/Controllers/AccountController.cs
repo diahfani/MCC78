@@ -25,13 +25,14 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(LoginVM loginVM)
     {
         var result = await repository.Login(loginVM);
+        HttpContext.Session.SetString("Email", loginVM.Email);
         if (result is null)
         {
             return RedirectToAction("Error", "Home");
-        } else if (result.StatusCode == "409") {
+        } else if (result.Code == 409) {
             ModelState.AddModelError(string.Empty, result.Message);
             return View();
-        } else if (result.StatusCode == "200")
+        } else if (result.Code == 200)
         {
             HttpContext.Session.SetString("JWToken", result.Data);
             return RedirectToAction("Index", "Home");
@@ -46,7 +47,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
+    /*[ValidateAntiForgeryToken]*/
     public async Task<IActionResult> Register(RegisterVM reg)
     {
         var result = await repository.Register(reg);
@@ -54,18 +55,19 @@ public class AccountController : Controller
         {
             return RedirectToAction("Error", "Home");
         }
-        else if (result.StatusCode == "409")
+        else if (result.StatusCode == 409)
         {
             ModelState.AddModelError(string.Empty, result.Message);
             TempData["Error"] = $"Something Went Wrong! - {result.Message}!";
             return View();
         }
-        else if (result.StatusCode == "200")
+        else if (result.StatusCode == 200)
         {
             TempData["Success"] = $"Data has been Successfully Registered! - {result.Message}!";
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("GetAllMasterEmployee", "Employee");
         }
-        return View();
+        return RedirectToAction("GetAllMasterEmployee", "Employee");
+        /*return View();*/
 
     }
 }

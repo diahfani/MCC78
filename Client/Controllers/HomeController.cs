@@ -15,7 +15,10 @@ namespace Client.Controllers
 
         public IActionResult Index()
         {
+            string jwToken = HttpContext.Session.GetString("JWToken") ?? "JWT is null";
+            ViewData["JWToken"] = jwToken;
             return View();
+
         }
 
         public IActionResult Privacy()

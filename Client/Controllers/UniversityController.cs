@@ -49,11 +49,11 @@ namespace Client.Controllers
             /*if (ModelState.IsValid)
             {*/
                 var result = await repository.Post(university);
-                if (result.StatusCode == "200")
+                if (result.StatusCode == 200)
                 {
                     return RedirectToAction(nameof(Index));
                 }
-                else if (result.StatusCode == "409")
+                else if (result.StatusCode == 409)
                 {
                     ModelState.AddModelError(string.Empty, result.Message);
                     return View();
@@ -89,11 +89,11 @@ namespace Client.Controllers
         public async Task<IActionResult> Edit(University university)
         {
             var result = await repository.Put(university);
-            if (result.StatusCode == "200")
+            if (result.StatusCode == 200)
             {
                 return RedirectToAction(nameof(Index));
             }
-            else if (result.StatusCode == "409")
+            else if (result.StatusCode == 409)
             {
                 ModelState.AddModelError(string.Empty, result.Message);
                 return View();
@@ -124,7 +124,7 @@ namespace Client.Controllers
         public async Task<IActionResult> Remove(Guid guid)
         {
             var result = await repository.Delete(guid);
-            if (result.StatusCode == "200")
+            if (result.StatusCode == 200)
             {
                 return RedirectToAction(nameof(Index));
             }

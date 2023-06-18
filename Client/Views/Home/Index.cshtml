@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var JWToken = ViewData["JWToken"];
 }
 
 @*<div class="d-flex">
@@ -18,7 +19,16 @@
     </table>
 </div>*@
 
-<div class="container-lg">
+<div class="container">
+    <div class="row">
+        <h1 class="h1">Welcome</h1>
+    </div>
+    <div class="row">
+        <textarea id="JWToken">@JWToken</textarea>
+    </div>
+</div>
+
+@*<div class="container-lg">
     <div class="row">
         <div class="card">
             <div class="card-body">
@@ -49,9 +59,13 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <p>
+            @JWToken
+        </p>
+    </div>
 </div>
 
-@*modal pokemon detail*@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
@@ -125,7 +139,6 @@
     </div>
 </div>
 
-@*modal add*@
 <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
@@ -202,7 +215,6 @@
     </div>
 </div>
 
-@*modal edit*@
 <div class="modal fade" id="employeeEditModal" tabindex="-1" aria-labelledby="employeeEditModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
@@ -279,7 +291,7 @@
     </div>
 </div>
 
-
+*@
 
 @*=========================================================================================================*@
 @*tugas 1*@

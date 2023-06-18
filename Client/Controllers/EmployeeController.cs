@@ -79,11 +79,11 @@ public class EmployeeController : Controller
         /*if (ModelState.IsValid)
         {*/
         var result = await repository.Post(employee);
-        if (result.StatusCode == "200")
+        if (result.StatusCode == 200)
         {
             return RedirectToAction(nameof(Index));
         }
-        else if (result.StatusCode == "409")
+        else if (result.StatusCode == 409)
         {
             ModelState.AddModelError(string.Empty, result.Message);
             return View();
@@ -122,11 +122,11 @@ public class EmployeeController : Controller
     public async Task<IActionResult> Edit(Employee employee)
     {
         var result = await repository.Put(employee);
-        if (result.StatusCode == "200")
+        if (result.StatusCode == 200)
         {
             return RedirectToAction(nameof(Index));
         }
-        else if (result.StatusCode == "409")
+        else if (result.StatusCode == 409)
         {
             ModelState.AddModelError(string.Empty, result.Message);
             return View();
@@ -163,7 +163,7 @@ public class EmployeeController : Controller
     public async Task<IActionResult> Remove(Guid guid)
     {
         var result = await repository.Delete(guid);
-        if (result.StatusCode == "200")
+        if (result.StatusCode == 200)
         {
             return RedirectToAction(nameof(Index));
         }

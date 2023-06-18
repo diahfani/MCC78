@@ -14,11 +14,11 @@ public class AccountRepository : GeneralRepository<Account, Guid>, IAccountRepos
     private readonly string request;
     public AccountRepository(string request = "Account/") : base(request)
     {
+        this.request = request;
         httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://localhost:7159/api/")
         };
-        this.request = request;
     }
 
     public async Task<ResponseVM<string>> Login(LoginVM loginVM)

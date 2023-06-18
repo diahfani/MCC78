@@ -7,13 +7,21 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Add services to the container.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(GeneralRepository<,>));
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// session
+/*builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+});*/
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
@@ -31,6 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         }; 
     });    
 
+/*builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();*/
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,10 +51,25 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+/*
+app.UseSession();*/
+/*app.UseAuthentication();*/
 
 app.UseRouting();
+app.UseSession();
+app.Use(async (context, next) =>
+{
+    var JWToken = context.Session.GetString("JWToken");
+    if (!string.IsNullOrEmpty(JWToken))
+    {
+        context.Request.Headers.Add("Authorization", "Bearer" + JWToken);
+    }
+
+    await next();
+});
 
 app.UseAuthorization();
 
