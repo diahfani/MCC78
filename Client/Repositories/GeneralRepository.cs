@@ -24,14 +24,14 @@ namespace Client.Repositories
         public GeneralRepository(string request)
         {
             this.request = request;
-            contextAccessor = new HttpContextAccessor();
-            httpClient = new HttpClient
+/*            contextAccessor = new HttpContextAccessor();
+*/            httpClient = new HttpClient
             {
                 BaseAddress = new Uri("https://localhost:7159/api/")
             };
             // Ini yg bawah skip dulu
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", contextAccessor.HttpContext?.Session.GetString("JWToken"));
-        }
+/*            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", contextAccessor.HttpContext?.Session.GetString("JWToken"));
+*/        }
 
         public async Task<ResponseMessageVM> Delete(TId guid)
         {

@@ -21,12 +21,12 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    /*[ValidateAntiForgeryToken]*/
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginVM loginVM)
     {
         var result = await repository.Login(loginVM);
-        HttpContext.Session.SetString("Email", loginVM.Email);
-        if (result is null)
+/*        HttpContext.Session.SetString("Email", loginVM.Email);
+*/        if (result is null)
         {
             return RedirectToAction("Error", "Home");
         } else if (result.Code == 409) {
@@ -46,8 +46,15 @@ public class AccountController : Controller
     
     }
 
+    [HttpGet("/Logout")]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return Redirect("/Account/Login");
+    }
+
     [HttpPost]
-    /*[ValidateAntiForgeryToken]*/
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterVM reg)
     {
         var result = await repository.Register(reg);

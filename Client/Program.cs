@@ -3,26 +3,22 @@ using Client.Repositories.Data;
 using Client.Repositories.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(GeneralRepository<,>));
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
-// session
-/*builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromSeconds(10);
-});*/
-
+/*diambil dari JWT API program.cs*/
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
         options.RequireHttpsMetadata = false;
@@ -59,22 +55,41 @@ app.UseSession();*/
 /*app.UseAuthentication();*/
 
 app.UseRouting();
+// Custom Error page
+app.UseStatusCodePages(async context => {
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode.Equals((int)HttpStatusCode.Unauthorized))
+    {
+        response.Redirect("/unauthorized");
+    }
+    if (response.StatusCode.Equals((int)HttpStatusCode.NotFound))
+    {
+        response.Redirect("/Notfound");
+    }
+    if (response.StatusCode.Equals((int)HttpStatusCode.Forbidden))
+    {
+        response.Redirect("/Forbidden");
+    }
+});
+
 app.UseSession();
 app.Use(async (context, next) =>
 {
     var JWToken = context.Session.GetString("JWToken");
     if (!string.IsNullOrEmpty(JWToken))
     {
-        context.Request.Headers.Add("Authorization", "Bearer" + JWToken);
+        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
     }
 
     await next();
 });
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=University}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

@@ -1,10 +1,12 @@
 ﻿using Client.Models;
 using Client.Repositories.Interface;
 using Client.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers;
 
+[Authorize]
 public class EmployeeController : Controller
 {
     private readonly IEmployeeRepository repository;
@@ -66,6 +68,7 @@ public class EmployeeController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create()
     {
         return View();
@@ -73,7 +76,7 @@ public class EmployeeController : Controller
 
 
     [HttpPost]
-    /*[ValidateAntiForgeryToken]*/
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Employee employee)
     {
         /*if (ModelState.IsValid)
@@ -93,7 +96,8 @@ public class EmployeeController : Controller
     }
 
     [HttpGet]
-    /*[ValidateAntiForgeryToken]*/
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(Guid guid)
     {
 
@@ -135,6 +139,7 @@ public class EmployeeController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid guid)
     {
         var result = await repository.Get(guid);
